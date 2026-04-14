@@ -1,46 +1,91 @@
-// main.js
-import { client, obtenerProductos } from './supabase.js';
-import {
-  agregarAlCarrito,
-  cambiarCantidad,
-  quitarDelCarrito,
-  vaciarCarrito,
-  cargarCarritoDesdeStorage
-} from './carrito.js';
+const SUPABASE_URL = "yliohprzqxzpyyrpvlvh";
+const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
 
-let productosOriginales = [];
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-document.addEventListener('DOMContentLoaded', async () => {
-  cargarCarritoDesdeStorage();
-  productosOriginales = await obtenerProductos();
-  mostrarProductos(productosOriginales);
-});
+let productos = [];
+let carrito = [];
 
-window.filtrarProductos = () => {
-  const texto = document.getElementById("busqueda").value.toLowerCase();
-  const filtrados = productosOriginales.filter(p =>
-    p.nombre.toLowerCase().includes(texto) ||
-    (p.descripcion || "").toLowerCase().includes(texto)
-  );
-  mostrarProductos(filtrados);
-};
+async function cargarProductos() {
+  const { data, error } = await client.from("productos").select("*");
+  if (error) return console.error(error);
 
-function mostrarProductos(productos) {
+  productos = data;
+  renderProductos(data);
+}
+
+function renderProductos(lista) {
   const contenedor = document.getElementById("productos");
   contenedor.innerHTML = "";
 
-  productos.forEach(prod => {
-    let urlImagen = prod.imagen_url || "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
-
+  lista.forEach(p => {
     const div = document.createElement("div");
     div.className = "producto";
-    div.innerHTML = `
-      <img src="${urlImagen}" alt="${prod.nombre}">
-      <h3>${prod.nombre}</h3>
-      <p>${prod.descripcion || ""}</p>
-      <p><strong>$${parseFloat(prod.precio || 0).toFixed(2)}</strong></p>
-      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
-    `;
+
+    const img = document.createElement("img");
+    img.src = p.imagen_url || "https://via.placeholder.com/200";
+
+    const nombre = document.createElement("h3");
+    nombre.textContent = p.nombre;
+
+    const precio = document.createElement("p");
+    precio.textContent = "$" + p.precio;
+
+    const btn = document.createElement("button");
+    btn.textContent = "Agregar";
+    btn.onclick = () => agregarCarrito(p);
+
+    div.append(img, nombre, precio, btn);
     contenedor.appendChild(div);
   });
 }
+
+function agregarCarrito(prod) {
+  const existe = carrito.find(p => p.id === prod.id);
+  if (existe) {
+    existe.cantidad++;
+  } else {
+    carrito.push({...prod, cantidad:1});
+  }
+  actualizarCarrito();
+}
+
+function actualizarCarrito() {
+  const lista = document.getElementById("listaCarrito");
+  const total = document.getElementById("total");
+  const contador = document.getElementById("contador");
+
+  lista.innerHTML = "";
+  let suma = 0;
+
+  carrito.forEach((p, i) => {
+    suma += p.precio * p.cantidad;
+
+    const li = document.createElement("li");
+    li.textContent = `${p.nombre} x${p.cantidad}`;
+
+    lista.appendChild(li);
+  });
+
+  total.textContent = suma;
+  contador.textContent = carrito.length;
+}
+
+function vaciarCarrito() {
+  carrito = [];
+  actualizarCarrito();
+}
+
+function toggleCarrito() {
+  document.getElementById("carritoPanel").classList.toggle("hidden");
+}
+
+document.getElementById("busqueda").addEventListener("input", e => {
+  const texto = e.target.value.toLowerCase();
+  const filtrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(texto)
+  );
+  renderProductos(filtrados);
+});
+
+cargarProductos();

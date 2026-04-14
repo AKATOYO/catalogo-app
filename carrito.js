@@ -97,3 +97,15 @@ function mostrarToast(mensaje) {
     toast.style.display = "none";
   }, 2000);
 }
+function agregarCarrito(prod) {
+  const existe = carrito.find(p => p.id === prod.id);
+
+  if (existe) {
+    existe.cantidad++;
+  } else {
+    carrito.push({...prod, cantidad:1});
+  }
+
+  actualizarCarrito();
+  mostrarToast("✔ Producto agregado");
+}

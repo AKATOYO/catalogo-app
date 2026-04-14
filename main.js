@@ -3,14 +3,18 @@ const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let productos = [];
-let carrito = [];
-
 async function cargarProductos() {
-  const { data, error } = await client.from("productos").select("*");
-  if (error) return console.error(error);
+  const { data, error } = await client
+    .from("productos")
+    .select("*");
 
-  productos = data;
+  console.log(data); // 👈 AGREGA ESTO
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
   renderProductos(data);
 }
 

@@ -85,7 +85,15 @@ async function cargarProductos() {
     alert("Error cargando productos");
     return;
   }
+function mostrarToast(mensaje) {
+  const toast = document.getElementById("toast");
+  toast.textContent = mensaje;
+  toast.style.display = "block";
 
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2000);
+}
   productos = data;
   renderProductos(data);
 }

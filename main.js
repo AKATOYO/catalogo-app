@@ -1,20 +1,24 @@
-const SUPABASE_URL = "yliohprzqxzpyyrpvlvh";
-const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+const SUPABASE_URL = "https://yliohprzqxzpyyrpvlvh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsaW9ocHJ6cXh6cHl5cnB2bHZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTIyNTcsImV4cCI6MjA5MTc2ODI1N30.vvWoWAnHbfmZMEDWTKV8aGs6OsTKjpMam1h2OXVCjQI";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let productos = [];
+let carrito = [];
 
 async function cargarProductos() {
   const { data, error } = await client
     .from("productos")
     .select("*");
 
-  console.log(data); // 👈 AGREGA ESTO
+  console.log(data);
 
   if (error) {
     console.error(error);
     return;
   }
 
+  productos = data;
   renderProductos(data);
 }
 

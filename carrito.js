@@ -74,3 +74,18 @@ function actualizarCarrito() {
 
   total.textContent = suma.toFixed(2);
 }
+async function cargarProductos() {
+  const loader = document.getElementById("loader");
+
+  const { data, error } = await client.from("productos").select("*");
+
+  loader.style.display = "none";
+
+  if (error) {
+    alert("Error cargando productos");
+    return;
+  }
+
+  productos = data;
+  renderProductos(data);
+}

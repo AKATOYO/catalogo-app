@@ -18,6 +18,15 @@ function renderProductos(lista) {
   const contenedor = document.getElementById("productos");
   contenedor.innerHTML = "";
 
+  if (!lista || lista.length === 0) {
+    contenedor.innerHTML = `
+      <p style="text-align:center; width:100%; font-size:18px;">
+        🚫 No hay productos disponibles
+      </p>
+    `;
+    return;
+  }
+
   lista.forEach(p => {
     const div = document.createElement("div");
     div.className = "producto";

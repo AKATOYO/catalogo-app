@@ -1,16 +1,17 @@
-<script>
+<!-- Tu script JavaScript actual permanece sin cambios, ya que está bien estructurado -->
+  <script>
     // Tu script JS sigue aquí sin cambios
     // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
 
     const SUPABASE_URL = "https://hwtkhblqcmptbkebiijx.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let productosOriginales = [];
     let carrito = [];
 
     async function cargarProductos() {
-      const { data, error } = await client.from("productos").select("*"); 
+      const { data, error } = await client.from("productos").select("*");
       if (error) return console.error("Error al cargar productos:", error);
       productosOriginales = data;
       mostrarProductos(data);

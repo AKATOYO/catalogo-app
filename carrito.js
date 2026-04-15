@@ -74,38 +74,3 @@ function actualizarCarrito() {
 
   total.textContent = suma.toFixed(2);
 }
-async function cargarProductos() {
-  const loader = document.getElementById("loader");
-
-  const { data, error } = await client.from("productos").select("*");
-
-  loader.style.display = "none";
-
-  if (error) {
-    alert("Error cargando productos");
-    return;
-  }
-  productos = data;
-  renderProductos(data);
-}
-function mostrarToast(mensaje) {
-  const toast = document.getElementById("toast");
-  toast.textContent = mensaje;
-  toast.style.display = "block";
-
-  setTimeout(() => {
-    toast.style.display = "none";
-  }, 2000);
-}
-function agregarCarrito(prod) {
-  const existe = carrito.find(p => p.id === prod.id);
-
-  if (existe) {
-    existe.cantidad++;
-  } else {
-    carrito.push({...prod, cantidad:1});
-  }
-
-  actualizarCarrito();
-  mostrarToast("✔ Producto agregado");
-}

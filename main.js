@@ -2,7 +2,7 @@
 // main.js
 
 const SUPABASE_URL = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJ";
+const SUPABASE_KEY = "yliohprzqxzpyyrpvlvh";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 

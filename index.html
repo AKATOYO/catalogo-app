@@ -8,6 +8,14 @@
    <link rel="stylesheet" href="css/estilos.css">   
    <style> 
    // TODO tu código
+     table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
    </style>
 </head>
 <body>
@@ -17,6 +25,25 @@
     <input type="text" id="busqueda" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
   </div>
 
+
+  
+    <table id="productos-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se insertarán aquí por JavaScript -->
+        </tbody>
+    </table>
+
+
+  
   <div class="acciones">
     <button onclick="window.print()">🖨️ Imprimir Productos</button>
   </div>

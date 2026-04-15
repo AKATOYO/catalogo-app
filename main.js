@@ -10,7 +10,7 @@
     let carrito = [];
 
     async function cargarProductos() {
-      const { data, error } = await client.from("productos").select("*");
+      const { data, error } = await client.from("producto").select("*"); 
       if (error) return console.error("Error al cargar productos:", error);
       productosOriginales = data;
       mostrarProductos(data);

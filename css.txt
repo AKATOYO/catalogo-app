@@ -7,7 +7,7 @@
       font-family: sans-serif;
       margin: 0;
       padding: 10px;
-      background: #f7f7e8;
+      background: #E6E68A;
     }
 
     h1 {

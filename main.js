@@ -1,4 +1,5 @@
-  <script>
+//main.js
+<script>
     // Tu script JS sigue aquí sin cambios
     // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
 

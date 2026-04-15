@@ -1,3 +1,15 @@
-const SUPABASE_URL = "https://hwtkhblqcmptbkebiijx.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  'https://TU-PROYECTO.supabase.co',
+  'TU-ANON-KEY'
+)
+
+// Ejemplo: leer datos
+const { data, error } = await supabase
+  .from('usuarios')
+  .select('*')
+
+console.log(data)
+</script>

@@ -16,17 +16,31 @@
     </style>
 </head>
 <body>
-    <h1>Lista de Productos</h1>
-      
-<div class="buscador">
-  <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
-</div>
+   <h1>Catálogo de Productos</h1>
 
-<div class="grid" id="productos"></div>
+  <div class="buscador">
+    <input type="text" id="busqueda" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
+  </div>
 
-<div class="carrito-link">
-  <a href="carrito.html">Ir al Carrito 🛒</a>
-</div>
+  <div class="acciones">
+    <button onclick="window.print()">🖨️ Imprimir Productos</button>
+  </div>
+
+  <div class="grid" id="productos"></div>
+
+  <div class="carrito">
+    <h3>🛒 Carrito</h3>
+    <ul id="carrito"></ul>
+    <p><strong>Total:</strong> $<span id="total">0.00</span></p>
+    <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
+
+    <div class="cliente">
+      <h4>🧍 Cliente</h4>
+      <input type="text" id="nombreCliente" placeholder="Nombre">
+      <input type="text" id="telefonoCliente" placeholder="Teléfono">
+      <textarea id="observacionesCliente" placeholder="Observaciones" rows="3"></textarea>
+    </div>
+  </div>
 
     
     <table id="productos-table">

@@ -3,7 +3,7 @@ const supabaseAnonKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Ree
 
 const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
- let productosOriginales = [];
+ let productos = [];
 
 async function fetchProductos() {
     const { data, error } = await supabase

@@ -1,11 +1,11 @@
 <style>
-table, th, td {
+#productos-table, th, td {
             border: 1px solid black;
             border-collapse: collapse;
             padding: 8px;
             
         }
-       th {
+#productos-table, th {
          background-color: #F54927;
 }
 * {

@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo de Productos</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-   <link rel="stylesheet" href="css/estilos.css">   
-   <style> 
-   // TODO tu código
-     table, th, td {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Productos</title>
+    <style>
+        table, th, td {
             border: 1px solid black;
             border-collapse: collapse;
             padding: 8px;
@@ -16,17 +13,10 @@
         th {
             background-color: #f2f2f2;
         }
-   </style>
+    </style>
 </head>
 <body>
-  <h1>Catálogo de Productos</h1>
-
-  <div class="buscador">
-    <input type="text" id="busqueda" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
-  </div>
-
-
-  
+    <h1>Lista de Productos</h1>
     <table id="productos-table">
         <thead>
             <tr>
@@ -42,31 +32,7 @@
         </tbody>
     </table>
 
-
-  
-  <div class="acciones">
-    <button onclick="window.print()">🖨️ Imprimir Productos</button>
-  </div>
-
-  <div class="grid" id="productos"></div>
-
-  <div class="carrito">
-    <h3>🛒 Carrito</h3>
-    <ul id="carrito"></ul>
-    <p><strong>Total:</strong> $<span id="total">0.00</span></p>
-    <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
-
-    <div class="cliente">
-      <h3>🧍 Cliente</h3>
-      <input type="text" id="nombreCliente" placeholder="Nombre">
-      <input type="text" id="telefonoCliente" placeholder="Teléfono">
-      <textarea id="observacionesCliente" placeholder="Observaciones" rows="3"></textarea>
-    </div>
-  </div>
-
-<script>
-  // TODO tu código JS
-</script>
-  
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
 </body>
 </html>

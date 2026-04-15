@@ -3,6 +3,8 @@ const supabaseAnonKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Ree
 
 const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
+ let productosOriginales = [];
+
 async function fetchProductos() {
     const { data, error } = await supabase
         .from('productos') // Asegúrate de que 'productos' sea el nombre correcto de tu tabla

@@ -17,13 +17,23 @@
 </head>
 <body>
     <h1>Lista de Productos</h1>
-      <div class="buscador">
-    <input type="text" id="busqueda" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
-  </div>
+      
+<div class="buscador">
+  <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
+</div>
+
+<div class="grid" id="productos"></div>
+
+<div class="carrito-link">
+  <a href="carrito.html">Ir al Carrito 🛒</a>
+  
+  <a href="https://akatoyo.github.io/catalogo-app/">Ir al Carrito 🛒</a>
+</div>
+
+    
     <table id="productos-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Precio</th>

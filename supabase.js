@@ -1,6 +1,6 @@
 // supabase.js
 export const SUPABASE_URL = "https://hwtkhblqcmptbkebiijx.supabase.co";
-export const SUPABASE_KEY = "yliohprzqxzpyyrpvlvh";
+export const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
 
 export const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 

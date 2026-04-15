@@ -1,5 +1,5 @@
-//main.js
-<script>
+<!-- Tu script JavaScript actual permanece sin cambios, ya que está bien estructurado -->
+  <script>
     // Tu script JS sigue aquí sin cambios
     // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
 
@@ -117,7 +117,4 @@
 
     cargarCarritoDesdeStorage();
     cargarProductos();
-
-
-
   </script>

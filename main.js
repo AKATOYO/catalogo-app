@@ -1,121 +1,77 @@
-<!-- Tu script JavaScript actual permanece sin cambios, ya que está bien estructurado -->
-  <script>
-    // Tu script JS sigue aquí sin cambios
-    // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
+  <script type="module">
+    import { obtenerProductos } from './supabase.js';
 
-    const supabaseUrl = 'https://yliohprzqxzpyyrpvlvh.supabase.co';
-const supabaseAnonKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Reemplaza con tu clave anon si es diferente
-
-const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-    let productosOriginales = [];
     let carrito = [];
 
-    async function cargarProductos() {
-      const { data, error } = await client.from("productos").select("*");
-      if (error) return console.error("Error al cargar productos:", error);
-      productosOriginales = data;
-      mostrarProductos(data);
-    }
+    async function mostrarProductos(filtro = '') {
+      const productos = await obtenerProductos(filtro);
+      const contenedor = document.getElementById('productos');
+      contenedor.innerHTML = '';
 
-    function mostrarProductos(productos) {
-      const contenedor = document.getElementById("productos");
-      contenedor.innerHTML = "";
-      productos.forEach(prod => {
-        let urlImagen = prod.imagen_url || "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
-        const div = document.createElement("div");
-        div.className = "producto";
+      if (productos.length === 0) {
+        contenedor.innerHTML = '<p>No se encontraron productos.</p>';
+        return;
+      }
+
+      productos.forEach(producto => {
+        const div = document.createElement('div');
+        div.className = 'producto';
         div.innerHTML = `
-          <img src="${urlImagen}" alt="${prod.nombre}">
-          <h3>${prod.nombre}</h3>
-          <p>${prod.descripcion || ""}</p>
-          <p><strong>$${parseFloat(prod.precio || 0).toFixed(2)}</strong></p>
-          <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
+          <h3>${producto.nombre}</h3>
+          <img src="${producto.imagen_url}" alt="${producto.nombre}">
+          <p>${producto.descripcion}</p>
+          <p>Precio: $${producto.precio}</p>
+          <button>Agregar al carrito</button>
         `;
+        div.querySelector('button').addEventListener('click', () => agregarAlCarrito(producto));
         contenedor.appendChild(div);
       });
     }
 
-    function filtrarProductos() {
-      const texto = document.getElementById("busqueda").value.toLowerCase();
-      const filtrados = productosOriginales.filter(p =>
-        p.nombre.toLowerCase().includes(texto) ||
-        (p.descripcion || "").toLowerCase().includes(texto)
-      );
-      mostrarProductos(filtrados);
-    }
-
     function agregarAlCarrito(producto) {
-      const existente = carrito.find(p => p.id === producto.id);
-      if (existente) {
-        existente.cantidad += 1;
-      } else {
-        producto.cantidad = 1;
-        carrito.push(producto);
-      }
+      carrito.push(producto);
       actualizarCarrito();
-      guardarCarrito();
     }
 
-    function quitarDelCarrito(indice) {
-      carrito.splice(indice, 1);
+    function eliminarDelCarrito(index) {
+      carrito.splice(index, 1);
       actualizarCarrito();
-      guardarCarrito();
-    }
-
-    function cambiarCantidad(index, cambio) {
-      carrito[index].cantidad += cambio;
-      if (carrito[index].cantidad <= 0) {
-        carrito.splice(index, 1);
-      }
-      actualizarCarrito();
-      guardarCarrito();
     }
 
     function actualizarCarrito() {
-      const lista = document.getElementById("carrito");
-      const total = document.getElementById("total");
-      lista.innerHTML = "";
-      let suma = 0;
-      carrito.forEach((item, index) => {
-        const precio = parseFloat(item.precio) || 0;
-        const subtotal = precio * item.cantidad;
-        suma += subtotal;
-        lista.innerHTML += `
-          <li>
-            <strong>${item.nombre}</strong><br>
-            <small>${item.descripcion || ""}</small><br>
-            $${item.precio} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>
-            <button onclick="cambiarCantidad(${index}, -1)">➖</button>
-            <button onclick="cambiarCantidad(${index}, 1)">➕</button>
-            <button onclick="quitarDelCarrito(${index})">❌</button>
-          </li>
+      const contenedor = document.getElementById('carrito');
+      contenedor.innerHTML = '';
+
+      carrito.forEach((producto, index) => {
+        const div = document.createElement('div');
+        div.className = 'carrito-item';
+        div.innerHTML = `
+          <h4>${producto.nombre}</h4>
+          <p>Precio: $${producto.precio}</p>
+          <button>Eliminar</button>
         `;
+        div.querySelector('button').addEventListener('click', () => eliminarDelCarrito(index));
+        contenedor.appendChild(div);
       });
-      total.textContent = suma.toFixed(2);
+
+      const total = carrito.reduce((sum, p) => sum + parseFloat(p.precio), 0);
+      document.getElementById('total').textContent = `Total: $${total.toFixed(2)}`;
     }
 
-    function guardarCarrito() {
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-    }
+    document.getElementById('btnBuscar').addEventListener('click', () => {
+      const filtro = document.getElementById('busqueda').value;
+      mostrarProductos(filtro);
+    });
 
-    function cargarCarritoDesdeStorage() {
-      const guardado = localStorage.getItem("carrito");
-      if (guardado) {
-        carrito = JSON.parse(guardado).map(item => ({
-          ...item,
-          cantidad: item.cantidad || 1
-        }));
-        actualizarCarrito();
+    document.getElementById('btnPagar').addEventListener('click', () => {
+      if (carrito.length === 0) {
+        alert('No has agregado productos al carrito.');
+      } else {
+        const total = carrito.reduce((sum, p) => sum + parseFloat(p.precio), 0);
+        alert(`Preparado para pagar: $${total.toFixed(2)}`);
+        // Aquí integrarías Stripe, PayPal, etc.
       }
-    }
+    });
 
-    function vaciarCarrito() {
-      carrito = [];
-      actualizarCarrito();
-      guardarCarrito();
-    }
-
-    cargarCarritoDesdeStorage();
-    cargarProductos();
+    // Inicialmente no muestra nada hasta que el usuario busque
   </script>

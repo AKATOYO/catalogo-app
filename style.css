@@ -5,8 +5,7 @@
             padding: 8px;
             
         }
- .productos-table th,
- .productos-table td * {
+ .productos-table th, td * {
          background-color: #F54927;
 }
 * {

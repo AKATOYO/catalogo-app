@@ -1,5 +1,6 @@
 <style>
-#productos-table, th, td {
+#productos-table {
+            width: 100%;
             border: 1px solid black;
             border-collapse: collapse;
             padding: 8px;

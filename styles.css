@@ -1,4 +1,3 @@
-<style>
 /* styles.css */
 body {
     font-family: Arial, sans-serif;
@@ -10,4 +9,3 @@ h1 {
   font-family: verdana;
   font-size: 25px; /* Ten en cuenta que '15%' para font-size puede no ser lo esperado, usualmente se usan 'px', 'em', 'rem' */
 }
-</style>

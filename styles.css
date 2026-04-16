@@ -1,13 +1,35 @@
  * {
       box-sizing: border-box;
     }
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #4D6BE3; /* Este color de fondo es diferente al del archivo de GitHub */
-    font-size: 45px;}
+    background-color: #f4f4f4;
+}
 h1 {
-  color: blue;
-  font-family: verdana;
-  font-size: 25px; /* Ten en cuenta que '15%' para font-size puede no ser lo esperado, usualmente se usan 'px', 'em', 'rem' */
+    color: #333;
+}
+.productos-table *{ /* Este selector aplica a TODOS los elementos dentro de .productos-table */
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid black;
+    padding: 8px;
+}
+.productos-table th, td *{ /* Este selector aplica a los <th> de .productos-table Y a TODOS los elementos dentro de <td> */
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    background-color: #F54927; /* Este color rojo se aplicará a los <th> y a los elementos dentro de <td> */
+}
+.tabla-productos th { /* Este selector aplica a los <th> que tengan la clase .tabla-productos */
+    background-color: #4CAF50; /* Este color verde se aplicará a los <th> de .tabla-productos */
+    color: white;
+}
+.tabla-productos tr:nth-child(even) { /* Aplica a las filas pares con clase .tabla-productos */
+    background-color: #f2f2f2;
+}
+.tabla-productos img { /* Aplica a las imágenes dentro de .tabla-productos */
+    max-width: 100px;
+    height: auto;
 }

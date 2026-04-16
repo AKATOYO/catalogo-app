@@ -8,18 +8,28 @@
     .producto { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; }
     img { max-width: 100%; height: auto; }
     button { margin-top: 5px; }
+    #total { font-weight: bold; margin-top: 20px; }
   </style>
 </head>
 <body>
   <h1>Mini Tienda</h1>
+
+  <input type="text" id="busqueda" placeholder="Buscar producto...">
+  <button id="btnBuscar">Buscar</button>
+
   <div id="productos"></div>
+  <div id="total">Total: $0</div>
+  <button id="btnPagar">Pagar</button>
 
   <script type="module">
     import { obtenerProductos } from './supabase.js';
 
-    async function mostrarProductos() {
-      const productos = await obtenerProductos();
+    let carrito = [];
+
+    async function mostrarProductos(filtro = '') {
+      const productos = await obtenerProductos(filtro);
       const contenedor = document.getElementById('productos');
+      contenedor.innerHTML = '';
 
       productos.forEach(producto => {
         const div = document.createElement('div');
@@ -29,12 +39,39 @@
           <img src="${producto.imagen_url}" alt="${producto.nombre}">
           <p>${producto.descripcion}</p>
           <p>Precio: $${producto.precio}</p>
-          <button onclick="alert('Seleccionaste: ${producto.nombre} - Precio: $${producto.precio}')">Comprar</button>
+          <button>Agregar al carrito</button>
         `;
+        div.querySelector('button').addEventListener('click', () => agregarAlCarrito(producto));
         contenedor.appendChild(div);
       });
     }
 
+    function agregarAlCarrito(producto) {
+      carrito.push(producto);
+      actualizarTotal();
+      alert(`Agregaste: ${producto.nombre}`);
+    }
+
+    function actualizarTotal() {
+      const total = carrito.reduce((sum, p) => sum + parseFloat(p.precio), 0);
+      document.getElementById('total').textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    document.getElementById('btnBuscar').addEventListener('click', () => {
+      const filtro = document.getElementById('busqueda').value;
+      mostrarProductos(filtro);
+    });
+
+    document.getElementById('btnPagar').addEventListener('click', () => {
+      if (carrito.length === 0) {
+        alert('No has agregado productos al carrito.');
+      } else {
+        alert(`Preparado para pagar: $${carrito.reduce((sum, p) => sum + parseFloat(p.precio), 0).toFixed(2)}`);
+        // Aquí puedes integrar Stripe, PayPal, etc.
+      }
+    });
+
+    // Mostrar todos los productos al cargar la página
     mostrarProductos();
   </script>
 </body>

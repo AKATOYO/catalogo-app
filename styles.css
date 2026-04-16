@@ -4,7 +4,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #4D6BE3; /* Este color de fondo es diferente al del archivo de GitHub */
-}
+    font-size: 45px;}
 h1 {
   color: blue;
   font-family: verdana;

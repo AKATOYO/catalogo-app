@@ -135,7 +135,7 @@
       font-size: 14px;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 968px) {
       .carrito {
         position: fixed;
         top: 10px;

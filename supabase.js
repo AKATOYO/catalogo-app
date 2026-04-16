@@ -17,3 +17,18 @@ export async function obtenerProductos() {
   }
   return data;
 }
+// Función para obtener productos (opcionalmente filtrados por nombre)
+export async function obtenerProductos(filtro = '') {
+  let query = supabase.from('productos').select('*');
+  
+  if (filtro) {
+    query = query.ilike('nombre', `%${filtro}%`); // Busca por nombre parcial
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error('Error al obtener productos:', error);
+    return [];
+  }
+  return data;
+}

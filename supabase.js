@@ -13,10 +13,8 @@ export async function obtenerProductos(filtro = '') {
   if (filtro && filtro.trim() !== '') {
     // Filtra por nombre o descripción usando ilike (case-insensitive)
     // Se usa .or() para combinar las dos condiciones con un OR lógico
-    query = query.or(
-      `nombre.ilike.%${filtro}%, descripcion.ilike.%${filtro}%`
-    );
-  }
+    query = query.or(`nombre.ilike.%${filtro}%`,`descripcion.ilike.%${filtro}%`);
+    }
 
   const { data, error } = await query;
 

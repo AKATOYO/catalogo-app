@@ -15,7 +15,8 @@
 <body>
   <h1>Mini Tienda</h1>
 
-  <input type="text" id="busqueda" placeholder="Escribe el nombre o descripción...">
+  <input type="text" id="busqueda" placeholder="Escribe el nombre del producto...">
+  <button id="btnBuscar">Buscar</button>
 
   <h2>Productos</h2>
   <div id="productos"></div>
@@ -29,8 +30,6 @@
     import { obtenerProductos } from './supabase.js';
 
     let carrito = [];
-
-    const inputBusqueda = document.getElementById('busqueda');
 
     async function mostrarProductos(filtro = '') {
       const productos = await obtenerProductos(filtro);
@@ -87,9 +86,8 @@
       document.getElementById('total').textContent = `Total: $${total.toFixed(2)}`;
     }
 
-    // Búsqueda en tiempo real
-    inputBusqueda.addEventListener('input', () => {
-      const filtro = inputBusqueda.value;
+    document.getElementById('btnBuscar').addEventListener('click', () => {
+      const filtro = document.getElementById('busqueda').value;
       mostrarProductos(filtro);
     });
 
@@ -99,6 +97,7 @@
       } else {
         const total = carrito.reduce((sum, p) => sum + parseFloat(p.precio), 0);
         alert(`Preparado para pagar: $${total.toFixed(2)}`);
+        // Aquí integrarías Stripe, PayPal, etc.
       }
     });
 

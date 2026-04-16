@@ -7,17 +7,18 @@ body {
 h1 {
     color: #333;
 }
-.productos-table {
+.productos-table *{
     width: 100%;
     
     margin-top: 20px;
     border: 1px solid black;
     padding: 8px;
 }
-.productos-table th, td {
+.productos-table th, td *{
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
+    background-color: #F54927;
 }
 .tabla-productos th {
     background-color: #4CAF50;

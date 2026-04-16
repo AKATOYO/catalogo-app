@@ -6,20 +6,16 @@ const supabaseKey = 'tu_clave_publica';
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Obtener productos filtrando por nombre o descripcion
-export async function obtenerProductos(filtro = '') {
-  let query = supabase.from('productos').select('*');
+// Ejemplo de uso:
+async function mostrarProductos() {
+  const productosFiltrados = await obtenerProductos('ejemplo'); // Busca "ejemplo" en nombre o descripción
+  console.log(productosFiltrados);
 
- if (filtro) {
-    // Filtra por nombre o descripción usando ilike
-    query = query.or(`nombre.ilike.%${filtro}%` , `descripcion.ilike.%${filtro}%`);
-  }
+  const todosLosProductos = await obtenerProductos(''); // No aplica filtro
+  console.log(todosLosProductos);
 
-  const { data, error } = await query;
-
-  if (error) {
-    console.error('Error al obtener productos:', error);
-    return [];
-  }
-
-  return data;
+  const productosConEspacios = await obtenerProductos('   '); // Tampoco aplica filtro
+  console.log(productosConEspacios);
 }
+
+mostrarProductos();

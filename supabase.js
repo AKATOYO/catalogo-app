@@ -9,15 +9,18 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Función para obtener productos filtrando por nombre
 export async function obtenerProductos(filtro = '') {
   let query = supabase.from('productos').select('*');
+
   if (filtro) {
-    query = query.ilike('nombre',`%${filtro}%`);
-    query = query.ilike('descripcion',`%${filtro}%`);
+    // Busca en nombre o descripción (ilike = insensible a mayúsculas)
+    query = query.or(`nombre.ilike.%${filtro}%,descripcion.ilike.%${filtro}%`);
   }
+
   const { data, error } = await query;
 
   if (error) {
     console.error('Error al obtener productos:', error);
     return [];
   }
+
   return data;
 }

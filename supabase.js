@@ -11,7 +11,7 @@ export async function obtenerProductos(filtro = '') {
 
   if (filtro) {
     // Filtra por nombre o descripción usando ilike
-    query = query.or(`nombre.ilike.%${filtro}%,descripcion.ilike.%${filtro}%`);
+    query = query.or('nombre','ilike'`%${filtro}%`,'descripcion.ilike',`%${filtro}%`);
   }
 
   const { data, error } = await query;

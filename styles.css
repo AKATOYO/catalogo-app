@@ -3,11 +3,11 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #4D6BE3;
+    background-color: #4D6BE3; /* Este color de fondo es diferente al del archivo de GitHub */
 }
 h1 {
   color: blue;
   font-family: verdana;
-  font-size: 15%;
+  font-size: 25px; /* Ten en cuenta que '15%' para font-size puede no ser lo esperado, usualmente se usan 'px', 'em', 'rem' */
 }
 </style>

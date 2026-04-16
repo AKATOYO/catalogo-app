@@ -8,26 +8,26 @@ body {
 h1 {
     color: #333;
 }
-.productos-table *{
+.productostable *{
     width: 100%;
     margin-top: 20px;
     border: 1px solid black;
     padding: 8px;
 }
-.productos-table th, td *{
+.productostable th, td *{
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
     background-color: #F54927;
 }
-.tabla-productos th {
+.productostabla th {
     background-color: #4CAF50;
     color: white;
 }
-.tabla-productos tr:nth-child(even) {
+.productostabla tr:nth-child(even) {
     background-color: #f2f2f2;
 }
-.tabla-productos img {
+.productostabla img {
     max-width: 100px;
     height: auto;
 }

@@ -6,16 +6,20 @@ const supabaseKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Obtener productos filtrando por nombre o descripcion
-// Ejemplo de uso:
-async function mostrarProductos() {
-  const productosFiltrados = await obtenerProductos('ejemplo'); // Busca "ejemplo" en nombre o descripción
-  console.log(productosFiltrados);
+export async function obtenerProductos(filtro = '') {
+  let query = supabase.from('productos').select('*');
 
-  const todosLosProductos = await obtenerProductos(''); // No aplica filtro
-  console.log(todosLosProductos);
+ if (filtro) {
+    // Filtra por nombre o descripción usando ilike
+    query = query.or(`nombre.ilike.%${filtro}%` , `descripcion.ilike.%${filtro}%`);
+  }
 
-  const productosConEspacios = await obtenerProductos('   '); // Tampoco aplica filtro
-  console.log(productosConEspacios);
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error al obtener productos:', error);
+    return [];
+  }
+
+  return data;
 }
-
-mostrarProductos();

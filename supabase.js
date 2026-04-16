@@ -9,9 +9,9 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 export async function obtenerProductos(filtro = '') {
   let query = supabase.from('productos').select('*');
 
-  if (filtro) {
+ if (filtro) {
     // Filtra por nombre o descripción usando ilike
-    query = query.or(`nombre.ilike.%${filtro}%,descripcion.ilike.%${filtro}%`);
+    query = query.or(`nombre.ilike.%${filtro}%` , `descripcion.ilike.%${filtro}%`);
   }
 
   const { data, error } = await query;

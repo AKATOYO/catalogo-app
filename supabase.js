@@ -1,9 +1,9 @@
 // supabase.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = 'https://tusupabaseurl.supabase.co';
-const supabaseKey = 'tu_clave_publica';
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = 'https://yliohprzqxzpyyrpvlvh.supabase.co';
+const supabaseKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Obtener productos filtrando por nombre o descripcion
 // Ejemplo de uso:

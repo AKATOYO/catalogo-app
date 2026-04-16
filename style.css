@@ -3,18 +3,18 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #4D6BE3;
+    background-color: #f4f4f4;
 }
 h1 {
-    color: #C91414;
+    color: #333;
 }
-.productostable *{
-    width: 100%; 
+.productos-table *{
+    width: 100%;
     margin-top: 20px;
     border: 1px solid black;
     padding: 8px;
 }
-.productostable th, td *{
+.productos-table th, td *{
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;

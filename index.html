@@ -344,6 +344,12 @@ function agregarAlCarrito(id) {
   actualizarCarrito();
 }
 
+ function quitarDelCarrito(indice) {
+      carrito.splice(indice, 1);
+      actualizarCarrito();
+      guardarCarrito();
+  }
+
 function actualizarCarrito() {
   const lista = document.getElementById("carrito");
   const total = document.getElementById("total");

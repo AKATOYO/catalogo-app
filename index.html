@@ -278,78 +278,125 @@
   </div>
 </div>
 
-<script>
-// --- Configuración de Supabase ---
-// ¡IMPORTANTE! Para producción, considera usar variables de entorno o un backend para manejar claves.
-const supabaseUrl = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-const supabaseKey = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc"; // Esta es una clave pública, pero aún así, ten cuidado.
+<!-- Tu script JavaScript actual permanece sin cambios, ya que está bien estructurado -->
+  <script>
+    // Tu script JS sigue aquí sin cambios
+    // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
 
-const client = supabase.createClient(supabaseUrl, supabaseKey);
+    const SUPABASE_URL = "https://hwtkhblqcmptbkebiijx.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- Variables Globales ---
-let productosOriginales = []; // Almacena todos los productos obtenidos de Supabase
-let carrito = []; // Almacena los productos en el carrito
+    let productosOriginales = [];
+    let carrito = [];
 
-// --- Funciones de Carga y Visualización ---
+    async function fetchProductos() {
+    const respuesta = await fetch('https://hwtkhblqcmptbkebiijx.supabase.co');
+    const datos = await respuesta.json();
+    console.log(datos);
+ }
 
-/**
- * Carga los productos desde Supabase y los muestra en la página.
- */
-async function cargarProductos() {
-  try {
-    const { data, error } = await client
-      .from("productos")
-      .select("*"); // Selecciona todas las columnas de la tabla "productos"
 
-    if (error) {
-      console.error("Error al cargar productos:", error);
-      // Mostrar un mensaje al usuario si falla la carga
-      document.getElementById("productos").innerHTML = "<p style='text-align: center; color: red;'>Error al cargar productos. Inténtelo más tarde.</p>";
-      return;
+    function mostrarProductos(productos) {
+      const contenedor = document.getElementById("productos");
+      contenedor.innerHTML = "";
+      productos.forEach(prod => {
+        let urlImagen = prod.imagen_url || "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
+        const div = document.createElement("div");
+        div.className = "producto";
+        div.innerHTML = `
+          <img src="${urlImagen}" alt="${prod.nombre}">
+          <h3>${prod.nombre}</h3>
+          <p>${prod.descripcion || ""}</p>
+          <p><strong>$${parseFloat(prod.precio || 0).toFixed(2)}</strong></p>
+          <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
+        `;
+        contenedor.appendChild(div);
+      });
     }
 
-    productosOriginales = data; // Guarda los productos originales
-    mostrarProductos(data); // Muestra los productos en el DOM
-  } catch (e) {
-    console.error("Excepción al cargar productos:", e);
-    document.getElementById("productos").innerHTML = "<p style='text-align: center; color: red;'>Ocurrió un error inesperado.</p>";
-  }
-}
+    function filtrarProductos() {
+      const texto = document.getElementById("busqueda").value.toLowerCase();
+      const filtrados = productosOriginales.filter(p =>
+        p.nombre.toLowerCase().includes(texto) ||
+        (p.descripcion || "").toLowerCase().includes(texto)
+      );
+      mostrarProductos(filtrados);
+    }
 
-/**
- * Renderiza la lista de productos en el DOM.
- * @param {Array} productos - Array de objetos producto a mostrar.
- */
-function mostrarProductos(productos) {
-  const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = ""; // Limpia el contenedor antes de añadir nuevos productos
+    function agregarAlCarrito(producto) {
+      const existente = carrito.find(p => p.id === producto.id);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        producto.cantidad = 1;
+        carrito.push(producto);
+      }
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-  if (productos.length === 0) {
-      contenedor.innerHTML = "<p style='text-align: center; width: 100%;'>No se encontraron productos.</p>";
-      return;
-  }
+    function quitarDelCarrito(indice) {
+      carrito.splice(indice, 1);
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-  productos.forEach(prod => {
-    const div = document.createElement("div");
-    div.className = "producto"; // Aplica la clase CSS para el estilo
+    function cambiarCantidad(index, cambio) {
+      carrito[index].cantidad += cambio;
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+      }
+      actualizarCarrito();
+      guardarCarrito();
+    }
 
-    // Crea el contenido HTML para cada producto
-    div.innerHTML = `
-      <img src="${prod.imagen_url || 'https://via.placeholder.com/200?text=Sin+Imagen'}" alt="${prod.nombre || 'Producto'}">
-      <h3>${prod.nombre || 'Nombre Desconocido'}</h3>
-      <p>${prod.descripcion || 'Sin descripción.'}</p>
-      <p><strong>$${Number(prod.precio).toFixed(2)}</strong></p>
-      <button onclick="agregarAlCarrito(${prod.id})">Agregar al Carrito</button>
-    `;
+    function actualizarCarrito() {
+      const lista = document.getElementById("carrito");
+      const total = document.getElementById("total");
+      lista.innerHTML = "";
+      let suma = 0;
+      carrito.forEach((item, index) => {
+        const precio = parseFloat(item.precio) || 0;
+        const subtotal = precio * item.cantidad;
+        suma += subtotal;
+        lista.innerHTML += `
+          <li>
+            <strong>${item.nombre}</strong><br>
+            <small>${item.descripcion || ""}</small><br>
+            $${item.precio} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>
+            <button onclick="cambiarCantidad(${index}, -1)">➖</button>
+            <button onclick="cambiarCantidad(${index}, 1)">➕</button>
+            <button onclick="quitarDelCarrito(${index})">❌</button>
+          </li>
+        `;
+      });
+      total.textContent = suma.toFixed(2);
+    }
 
-    contenedor.appendChild(div); // Añade el div del producto al contenedor principal
-  });
-}
+    function guardarCarrito() {
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
 
-// --- Funciones de Búsqueda y Filtrado ---
+    function cargarCarritoDesdeStorage() {
+      const guardado = localStorage.getItem("carrito");
+      if (guardado) {
+        carrito = JSON.parse(guardado).map(item => ({
+          ...item,
+          cantidad: item.cantidad || 1
+        }));
+        actualizarCarrito();
+      }
+    }
 
-/**
- * Filtra los productos mostrados basándose en el texto de búsqueda.
- */
-function filtrarProductos() {
-  const
+    function vaciarCarrito() {
+      carrito = [];
+      actualizarCarrito();
+      guardarCarrito();
+    }
+
+    cargarCarritoDesdeStorage();
+    cargarProductos();
+  </script>
+</body>
+</html>

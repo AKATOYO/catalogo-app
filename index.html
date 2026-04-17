@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=9, minimum-scale=0.01">
   <title>Catálogo de Productos</title>
 
+  <!-- Asegúrate de que la URL de Supabase JS sea la correcta, si es necesario -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -22,15 +23,20 @@
       margin-bottom: 20px;
     }
 
+    .buscador {
+      text-align: center; /* Centra el contenedor del input */
+      margin-bottom: 20px;
+    }
+
     .buscador input {
-      width: 400px;
+      width: 80%; /* Ocupa más ancho en pantallas pequeñas */
+      max-width: 400px; /* Limita el ancho máximo */
       height: auto;
       padding: 10px;
-      margin: auto;
-      display: block;
+      display: inline-block; /* Permite centrar con text-align: center en el padre */
       border-radius: 8px;
       border: 1px solid #ccc;
-      flex-direction: column;
+      /* Eliminado: flex-direction: column; - No es necesario ni apropiado aquí */
     }
 
     .acciones {
@@ -46,73 +52,199 @@
       background: #007bff;
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .acciones button:hover {
+        background: #0056b3;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 2fr));
-      gap: 15px;
+      /* Ajuste para que los items del grid se adapten mejor */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Minimo 220px, se expande */
+      gap: 20px; /* Mayor espacio entre items */
       margin-top: 20px;
+      padding: 0 10px; /* Padding para que no se pegue a los bordes */
     }
-   .producto {
-  width: 250px;;
-  height: auto;   
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  
-  justify-content: space-between;
-  text-align: center;
-  width: 250px;;
-  height: auto;   
-}
 
-.producto img {
-  width: 200px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 6px auto;
-}
+   .producto {
+      /* Eliminado: width: 250px;; (doble punto y coma) y width: 250px;; */
+      background: white;
+      border: 1px solid #e0e0e0; /* Borde más suave */
+      border-radius: 10px;
+      padding: 15px; /* Más padding interno */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Sombra más sutil */
+      display: flex; /* Habilitar flexbox */
+      flex-direction: column; /* Apilar elementos verticalmente */
+      justify-content: space-between; /* Espacio entre contenido y botón */
+      text-align: center;
+      overflow: hidden; /* Para asegurar que los bordes redondeados se apliquen bien */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .producto:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .producto img {
+      max-width: 100%; /* Asegura que la imagen no se salga del contenedor */
+      height: 150px; /* Altura fija para las imágenes */
+      object-fit: contain; /* Mantiene la proporción */
+      display: block;
+      margin: 0 auto 10px auto; /* Más margen inferior */
+      border-radius: 5px; /* Bordes redondeados para la imagen */
+    }
+
+    .producto h3 {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .producto p {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 10px;
+        flex-grow: 1; /* Permite que el párrafo ocupe el espacio disponible */
+    }
+
+    .producto p strong {
+        font-size: 1.2em;
+        color: #007bff;
+    }
 
      .producto button {
-      margin-top: auto;
-      padding: 8px;
+      /* margin-top: auto; <- Ahora funciona porque .producto es flex column */
+      padding: 10px 15px; /* Botón más grande */
       border: none;
       border-radius: 6px;
       background: #28a745;
       color: white;
       cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+      margin-top: 10px; /* Espacio entre el texto y el botón */
+    }
+    .producto button:hover {
+        background: #218838;
     }
 
     .carrito {
-      position: fixed;
+      position: sticky; /* Cambiado a sticky para que se mueva con el scroll pero se quede pegado */
       right: 10px;
-      top: 10px;
+      top: 10px; /* Se queda pegado arriba */
       width: 300px;
       background: white;
-      padding: 10px;
+      padding: 15px; /* Más padding */
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.2);
-      max-height: 90vh;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1); /* Sombra más pronunciada */
+      max-height: calc(90vh - 20px); /* Ajuste para el padding */
       overflow-y: auto;
+      border: 1px solid #e0e0e0;
+    }
+
+    .carrito h3 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .carrito ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .carrito li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed #eee;
+        font-size: 0.95em;
+    }
+    .carrito li:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .carrito li button {
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 3px 8px;
+        cursor: pointer;
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+     .carrito li button:hover {
+        background: #c82333;
+    }
+
+    .carrito p {
+        font-size: 1.1em;
+        text-align: right;
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+
+    .carrito button:last-of-type { /* Botón de vaciar */
+        width: 100%;
+        background: #ffc107;
+        color: #333;
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 6px;
+    }
+    .carrito button:last-of-type:hover {
+        background: #e0a800;
+    }
+
+    .cliente {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+    .cliente h4 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+        margin-bottom: 15px;
     }
 
     .cliente input,
     .cliente textarea {
       width: 100%;
       margin-bottom: 10px;
-      padding: 6px;
+      padding: 8px; /* Más padding */
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+    .cliente textarea {
+        resize: vertical; /* Permite redimensionar verticalmente */
+        min-height: 80px;
     }
 
     @media(max-width:768px){
       .carrito{
-        position: static;
+        position: static; /* Se vuelve estático en pantallas pequeñas */
         width: 100%;
         margin-top: 20px;
+        margin-bottom: 20px; /* Espacio debajo del carrito */
+      }
+      .grid {
+          grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+      }
+      .buscador input {
+          width: 95%; /* Ocupa casi todo el ancho */
       }
     }
   </style>
@@ -126,7 +258,7 @@
 </div>
 
 <div class="acciones">
-  <button onclick="window.print()">Imprimir</button>
+  <button onclick="window.print()">Imprimir Catálogo</button>
 </div>
 
 <div class="grid" id="productos"></div>
@@ -135,124 +267,89 @@
   <h3>Carrito</h3>
   <ul id="carrito"></ul>
   <p><strong>Total:</strong> $<span id="total">0.00</span></p>
-  <button onclick="vaciarCarrito()">Vaciar</button>
+  <button onclick="vaciarCarrito()">Vaciar Carrito</button>
 
   <div class="cliente">
-    <h4>Cliente</h4>
-    <input type="text" placeholder="Nombre">
-    <input type="text" placeholder="Teléfono">
-    <textarea placeholder="Observaciones"></textarea>
+    <h4>Datos del Cliente</h4>
+    <input type="text" id="cliente-nombre" placeholder="Nombre">
+    <input type="text" id="cliente-telefono" placeholder="Teléfono">
+    <textarea id="cliente-observaciones" placeholder="Observaciones"></textarea>
+    <!-- Podrías añadir un botón para "Finalizar Compra" aquí -->
   </div>
 </div>
 
 <script>
+// --- Configuración de Supabase ---
+// ¡IMPORTANTE! Para producción, considera usar variables de entorno o un backend para manejar claves.
 const supabaseUrl = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-const supabaseKey = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+const supabaseKey = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc"; // Esta es una clave pública, pero aún así, ten cuidado.
 
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-let productosOriginales = [];
-let carrito = [];
+// --- Variables Globales ---
+let productosOriginales = []; // Almacena todos los productos obtenidos de Supabase
+let carrito = []; // Almacena los productos en el carrito
 
+// --- Funciones de Carga y Visualización ---
+
+/**
+ * Carga los productos desde Supabase y los muestra en la página.
+ */
 async function cargarProductos() {
-  const { data, error } = await client
-    .from("productos")
-    .select("*");
+  try {
+    const { data, error } = await client
+      .from("productos")
+      .select("*"); // Selecciona todas las columnas de la tabla "productos"
 
-  if (error) {
-    console.error(error);
-    return;
+    if (error) {
+      console.error("Error al cargar productos:", error);
+      // Mostrar un mensaje al usuario si falla la carga
+      document.getElementById("productos").innerHTML = "<p style='text-align: center; color: red;'>Error al cargar productos. Inténtelo más tarde.</p>";
+      return;
+    }
+
+    productosOriginales = data; // Guarda los productos originales
+    mostrarProductos(data); // Muestra los productos en el DOM
+  } catch (e) {
+    console.error("Excepción al cargar productos:", e);
+    document.getElementById("productos").innerHTML = "<p style='text-align: center; color: red;'>Ocurrió un error inesperado.</p>";
   }
-
-  productosOriginales = data;
-  mostrarProductos(data);
 }
 
+/**
+ * Renderiza la lista de productos en el DOM.
+ * @param {Array} productos - Array de objetos producto a mostrar.
+ */
 function mostrarProductos(productos) {
   const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = "";
+  contenedor.innerHTML = ""; // Limpia el contenedor antes de añadir nuevos productos
+
+  if (productos.length === 0) {
+      contenedor.innerHTML = "<p style='text-align: center; width: 100%;'>No se encontraron productos.</p>";
+      return;
+  }
 
   productos.forEach(prod => {
     const div = document.createElement("div");
-    div.className = "producto";
+    div.className = "producto"; // Aplica la clase CSS para el estilo
 
+    // Crea el contenido HTML para cada producto
     div.innerHTML = `
-      <img src="${prod.imagen_url || ''}">
-      <h3>${prod.nombre}</h3>
-      <p>${prod.descripcion || ''}</p>
+      <img src="${prod.imagen_url || 'https://via.placeholder.com/200?text=Sin+Imagen'}" alt="${prod.nombre || 'Producto'}">
+      <h3>${prod.nombre || 'Nombre Desconocido'}</h3>
+      <p>${prod.descripcion || 'Sin descripción.'}</p>
       <p><strong>$${Number(prod.precio).toFixed(2)}</strong></p>
-      <button onclick="agregarAlCarrito(${prod.id})">Agregar</button>
+      <button onclick="agregarAlCarrito(${prod.id})">Agregar al Carrito</button>
     `;
 
-    contenedor.appendChild(div);
+    contenedor.appendChild(div); // Añade el div del producto al contenedor principal
   });
 }
 
+// --- Funciones de Búsqueda y Filtrado ---
+
+/**
+ * Filtra los productos mostrados basándose en el texto de búsqueda.
+ */
 function filtrarProductos() {
-  const texto = document.getElementById("busqueda").value.toLowerCase();
-
-  const filtrados = productosOriginales.filter(p =>
-    p.nombre.toLowerCase().includes(texto) ||
-    (p.descripcion || "").toLowerCase().includes(texto)
-  );
-
-  mostrarProductos(filtrados);
-}
-
-function agregarAlCarrito(id) {
-  const producto = productosOriginales.find(p => p.id === id);
-
-  const existe = carrito.find(p => p.id === id);
-
-  if (existe) {
-    existe.cantidad++;
-  } else {
-    carrito.push({...producto, cantidad: 1});
-  }
-
-  actualizarCarrito();
-}
-
-function actualizarCarrito() {
-  const lista = document.getElementById("carrito");
-  const total = document.getElementById("total");
-
-  lista.innerHTML = "";
-  let suma = 0;
-
-  carrito.forEach((item, index) => {
-    const subtotal = item.precio * item.cantidad;
-    suma += subtotal;
-
-    lista.innerHTML += `
-      <li>
-        ${item.nombre} x ${item.cantidad}
-        <button onclick="cambiarCantidad(${index}, -1)">-</button>
-        <button onclick="cambiarCantidad(${index}, 1)">+</button>
-      </li>
-    `;
-  });
-
-  total.textContent = suma.toFixed(2);
-}
-
-function cambiarCantidad(index, cambio) {
-  carrito[index].cantidad += cambio;
-
-  if (carrito[index].cantidad <= 0) {
-    carrito.splice(index, 1);
-  }
-
-  actualizarCarrito();
-}
-
-function vaciarCarrito() {
-  carrito = [];
-  actualizarCarrito();
-}
-
-cargarProductos();
-</script>
-
-</body>
-</html>
+  const

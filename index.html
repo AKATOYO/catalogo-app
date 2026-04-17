@@ -172,30 +172,37 @@
         padding-bottom: 0;
     }
 
-    /* Estilos para los botones de cantidad en el carrito */
-    .carrito li span { /* Aseguramos que el span contenedor esté bien definido */
-        display: flex; /* Usamos flex para alinear bien los botones */
-        align-items: center; /* Centra verticalmente */
+        /* Estilos para los botones de cantidad en el carrito */
+    .carrito li span {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centra los botones dentro del span */
     }
 
     .carrito li button {
-        background: #f0ad4e; /* Un color más neutro o similar al botón "Vaciar" */
-        color: #333; /* Texto oscuro */
-        border: 1px solid #d48f2e; /* Borde sutil */
-        border-radius: 5px; /* Bordes un poco más redondeados */
-        padding: 5px 10px; /* Padding un poco mayor para simetría */
+        background: #f0ad4e; /* Color base */
+        color: #333;
+        border: 1px solid #d48f2e;
+        border-radius: 5px;
         cursor: pointer;
-        font-size: 0.9em; /* Tamaño de fuente ligeramente mayor */
-        margin: 0 3px; /* Pequeño margen entre botones */
+        font-size: 0.8em; /* Reducimos el font-size para que quepa bien */
+        margin: 0 3px;
         transition: background-color 0.3s ease;
-        min-width: 30px; /* Ancho mínimo para que no se achiquen demasiado */
-        text-align: center;
+        min-width: 10px;  /* Ancho mínimo */
+        min-height: 10px; /* Altura mínima */
+        width: 10px;      /* Ancho fijo */
+        height: 10px;     /* Altura fija */
+        padding: 0;       /* Quitamos padding para que el tamaño sea exacto */
+        display: flex;    /* Usamos flex para centrar el contenido (el signo) */
+        align-items: center;
+        justify-content: center;
+        line-height: 1;   /* Ajustamos line-height para centrar el texto */
     }
     .carrito li button:hover {
-        background: #e0a800; /* Color al pasar el ratón */
+        background: #e0a800;
     }
 
-    /* Estilo específico para el botón '-' si quieres que sea diferente, o déjalo igual */
+    /* Estilo específico para el botón '-' */
     .carrito li button:first-of-type {
         background: #d9534f; /* Rojo para decrementar */
         color: white;
@@ -204,7 +211,6 @@
     .carrito li button:first-of-type:hover {
         background: #c82333;
     }
-
     .carrito p {
         font-size: 1.1em;
         text-align: right;

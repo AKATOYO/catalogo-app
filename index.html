@@ -172,43 +172,17 @@
         padding-bottom: 0;
     }
 
-        /* Estilos para los botones de cantidad en el carrito */
-    .carrito li span {
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Centra los botones dentro del span */
-    }
-
-    .carrito li button {
-        background: #f0ad4e; /* Color base */
-        color: #333;
-        border: 1px solid #d48f2e;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 0.8em; /* Reducimos el font-size para que quepa bien */
-        margin: 0 3px;
-        transition: background-color 0.3s ease;
-        min-width: 4px;  /* Ancho mínimo */
-        min-height: 4px; /* Altura mínima */
-        width: 4px;      /* Ancho fijo */
-        height: 4px;     /* Altura fija */
-        padding: 0;       /* Quitamos padding para que el tamaño sea exacto */
-        display: flex;    /* Usamos flex para centrar el contenido (el signo) */
-        align-items: center;
-        justify-content: center;
-        line-height: 1;   /* Ajustamos line-height para centrar el texto */
-    }
-    .carrito li button:hover {
-        background: #e0a800;
-    }
-
-    /* Estilo específico para el botón '-' */
-    .carrito li button:first-of-type {
-        background: #d9534f; /* Rojo para decrementar */
+       .carrito li button {
+        background: #dc3545; /* Rojo para el botón de decrementar */
         color: white;
-        border-color: #d43f3a;
+        border: none;
+        border-radius: 4px;
+        padding: 3px 8px; /* Padding pequeño */
+        cursor: pointer;
+        font-size: 0.8em;
+        margin-left: 5px;
     }
-    .carrito li button:first-of-type:hover {
+     .carrito li button:hover {
         background: #c82333;
     }
     .carrito p {
@@ -224,7 +198,7 @@
         background: #ffc107;
         color: #333;
         margin-top: 15px;
-        padding: 10px;
+        padding: 0px;
         border-radius: 6px;
     }
     .carrito button:last-of-type:hover {

@@ -360,6 +360,7 @@ function actualizarCarrito() {
         ${item.nombre} x ${item.cantidad}
         <button onclick="cambiarCantidad(${index}, -1)">-</button>
         <button onclick="cambiarCantidad(${index}, 1)">+</button>
+        <button onclick="quitarDelCarrito(${index})">❌</button>
       </li>
     `;
   });

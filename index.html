@@ -1,313 +1,333 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Catálogo de Productos</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    .buscador, .acciones { margin-bottom: 20px; }
+    .producto { border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin: 10px; width: 200px; }
+    .producto img { max-width: 100%; border-radius: 8px; }
+    .grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .carrito { position: fixed; top: 10px; right: 10px; background: #f8f8f8; border: 1px solid #ccc; padding: 10px; border-radius: 8px; width: 250px; max-height: 90vh; overflow-y: auto; }
+    .carrito ul { list-style: none; padding: 0; margin: 0; }
+    .carrito li { margin-bottom: 5px; font-size: 14px; }
+    
+    
+   .grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 10px;
-      background: #f7f7f7;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .buscador input {
-      width: 100%;
-      max-width: 400px;
-      padding: 10px;
-      margin: auto;
-      display: block;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    .acciones {
-      text-align: center;
-      margin: 15px 0;
-    }
-
-    .acciones button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .producto {
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .producto img {
-      max-width: 100%;
+.producto {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+    
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .carrito, .carrito * {
+    visibility: visible;
+  }
+  .carrito {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  
+  
+   #micarrito {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos imagenes por fila */
+    gap: 15px;
+  }
+  
+  
+      #micarrito img {
+      width: 83%;
       height: auto;
-      border-radius: 8px;
-      margin-bottom: 10px;
+      object-fit: cover;
+      margin-bottom: 6px;
+      flex-wrap: wrap; /* Para que los productos se acomoden en varias filas */
+      gap: 21px; /* Espacio entre productos */
+      
     }
+  
+  
+  
+  
+  
 
-    .producto button {
-      margin-top: auto;
-      padding: 8px 12px;
-      font-size: 14px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .carrito {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      width: 400px;
-      height: auto;
-      background: white;
-      border-top-left-radius: 10px;
-      border: 1px solid #ccc;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-      padding: 10px;
-      overflow-y: auto;
-      max-height: 90vh;
-      z-index: 1000;
-    }
-
-    .carrito h3 {
-      margin-top: 0;
-    }
-
-    .carrito ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 14px;
-    }
-
-     li {
-      margin-bottom: 8px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 5px;
-    }
-
-    .carrito button {
-      margin: 2px 2px 0 0;
-      font-size: 12px;
-    }
-
-    .cliente input,
-    .cliente textarea {
-      width: 100%;
-      padding: 6px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    @media (min-width: 768px) {
-      .carrito {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        width: 300px;
-        max-height: 90vh;
-      }
-    }
-
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .carrito, .carrito * {
-        visibility: visible;
-      }
-      .carrito {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-      }
-    }
+   
+.cliente {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.cliente input, .cliente textarea {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+    
+  .carrito button {
+  margin: 2px;
+  padding: 2px 6px;
+  font-size: 14px;
+}
+    
+    
+    
+    .miniatura {
+  width: 100px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
 
   
+    
+    
+    
   </style>
-
 </head>
 <body>
 
-<h1>Catálogo de Productos</h1>
+  <h1>Catálogo de Productos</h1>
 
-<div class="buscador">
-  <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
-</div>
+  <div class="buscador">
+    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()" style="padding:5px; width: 300px;">
+  </div>
 
-<div class="acciones">
-  <button onclick="window.print()">Imprimir</button>
-</div>
+  <div class="acciones">
+    <button onclick="window.print()">🖨️ Imprimir Productos</button>
+  </div>
 
-<div class="grid" id="productos"></div>
-
- 
-<div class="carrito">
-  <h3>Carrito</h3>
-  <ul id="carrito"></ul>
-  <p><strong>Total:</strong> $<span id="total">0.00</span></p>
-  <button onclick="vaciarCarrito()">Vaciar</button>
+  <div class="grid" id="productos">  </div>
+  
   
 
-  <div class="cliente">
-    <h4>Cliente</h4>
-    <input type="text" placeholder="Nombre">
-    <input type="text" placeholder="Teléfono">
-    <textarea placeholder="Observaciones"></textarea>
-  </div>
+  <div class="carrito">
+    
+     <div id="mi carrito">
+         <h3>🛒 Carrito</h3>
+        <ul id="carrito"></ul>
+        <p><strong>Total:</strong> $<span id="total">0</span></p>
+    
+       <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
+     
+    </div>
+    
+    
+    <div class="cliente">
+  <h3>🧍 Datos del Cliente</h3>
+  <input type="text" id="nombreCliente" placeholder="Nombre" style="width:100%; margin-bottom:5px;">
+  <input type="text" id="telefonoCliente" placeholder="Teléfono" style="width:100%; margin-bottom:5px;">
+  <textarea id="observacionesCliente" placeholder="Observaciones" rows="3" style="width:100%;"></textarea>
 </div>
 
+    
+ 
+    
+  </div>
+   
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<div id="productos" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+
+
 <script>
-const supabaseUrl = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-const supabaseKey = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+  const SUPABASE_URL = "https://yliohprzqxzpyyrpvlvh.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const client = supabase.createClient(supabaseUrl, supabaseKey);
+  let productosOriginales = [];
+  let carrito = [];
 
-let productosOriginales = [];
-let carrito = [];
-
-async function cargarProductos() {
-  const { data, error } = await client
-    .from("productos")
-    .select("*");
-
-  if (error) {
-    console.error(error);
-    return;
+  async function cargarProductos() {
+    const { data, error } = await client.from("productos").select("*");
+    if (error) {
+      console.error("Error al cargar productos:", error);
+      return;
+    }
+    productosOriginales = data;
+    mostrarProductos(data);
   }
 
-  productosOriginales = data;
-  mostrarProductos(data);
-}
-
-function mostrarProductos(productos) {
+ function mostrarProductos(productos) {
   const contenedor = document.getElementById("productos");
   contenedor.innerHTML = "";
 
   productos.forEach(prod => {
+    // Validar si hay imagen, si no usar una por defecto
+     let urlImagen = prod.imagen_url;
+    if (!urlImagen || urlImagen === "null" || urlImagen.trim() === "") {
+    urlImagen = "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
+ }
+    
+    
+
     const div = document.createElement("div");
     div.className = "producto";
-
     div.innerHTML = `
-      <img src="${prod.imagen_url || ''}">
+      <img src="${urlImagen}" alt="${prod.nombre}">
       <h3>${prod.nombre}</h3>
-      <p>${prod.descripcion || ''}</p>
-      <p><strong>$${Number(prod.precio).toFixed(2)}</strong></p>
-      <button onclick="agregarAlCarrito(${prod.id})">Agregar</button>
+      <p>${prod.descripcion || ""}</p>
+      <p><strong>$${parseFloat(prod.precio) ? parseFloat(prod.precio).toFixed(2) : "0.00"}</strong></p>
+      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
     `;
-
     contenedor.appendChild(div);
   });
 }
 
-function filtrarProductos() {
-  const texto = document.getElementById("busqueda").value.toLowerCase();
 
-  const filtrados = productosOriginales.filter(p =>
-    p.nombre.toLowerCase().includes(texto) ||
-    (p.descripcion || "").toLowerCase().includes(texto)
-  );
+  function filtrarProductos() {
+    const texto = document.getElementById("busqueda").value.toLowerCase();
+    const filtrados = productosOriginales.filter(p =>
+      p.nombre.toLowerCase().includes(texto) ||
+      (p.descripcion || "").toLowerCase().includes(texto)
+    );
+    mostrarProductos(filtrados);
+  }
 
-  mostrarProductos(filtrados);
-}
-
-function agregarAlCarrito(id) {
-  const producto = productosOriginales.find(p => p.id === id);
-
-  const existe = carrito.find(p => p.id === id);
-
-  if (existe) {
-    existe.cantidad++;
+  
+  
+  
+ function agregarAlCarrito(producto) {
+  // Si ya está en el carrito, solo incrementa la cantidad
+  const existente = carrito.find(p => p.id === producto.id);
+  if (existente) {
+    existente.cantidad += 1;
   } else {
-    carrito.push({...producto, cantidad: 1});
+    producto.cantidad = 1;
+    carrito.push(producto);
   }
-
   actualizarCarrito();
+  guardarCarrito();
 }
 
- function quitarDelCarrito(indice) {
-      carrito.splice(indice, 1);
-      actualizarCarrito();
-      guardarCarrito();
-  }
+  
+  
+  function quitarDelCarrito(indice) {
+  carrito.splice(indice, 1);  
+  actualizarCarrito();
+  guardarCarrito();
+}
 
+  
+  
+  
+  
 function actualizarCarrito() {
   const lista = document.getElementById("carrito");
   const total = document.getElementById("total");
-
   lista.innerHTML = "";
   let suma = 0;
 
   carrito.forEach((item, index) => {
-    const subtotal = item.precio * item.cantidad;
+    const precio = parseFloat(item.precio) || 0;
+    const subtotal = precio * item.cantidad;
     suma += subtotal;
 
-    lista.innerHTML += `
-      <li>
-        ${item.nombre} x ${item.cantidad}
-        <button onclick="cambiarCantidad(${index}, -1)">-</button>
-        <button onclick="cambiarCantidad(${index}, 1)">+</button>    
-      </li>
-    `;
+lista.innerHTML += `
+  <li>
+    <strong>${item.nombre}</strong><br>
+    <small>${item.descripcion || "Sin descripción"}</small><br>
+    $${item.precio} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}<br>
+    <button onclick="cambiarCantidad(${index}, -1)">➖</button>
+    <button onclick="cambiarCantidad(${index}, 1)">➕</button>
+    <button onclick="quitarDelCarrito(${index})">❌</button>
+  </li>
+`;
   });
 
   total.textContent = suma.toFixed(2);
 }
 
-function cambiarCantidad(index, cambio) {
-  carrito[index].cantidad += cambio;
 
+  
+  function cambiarCantidad(index, cambio) {
+  carrito[index].cantidad += cambio;
   if (carrito[index].cantidad <= 0) {
     carrito.splice(index, 1);
   }
-
   actualizarCarrito();
+  guardarCarrito();
 }
 
-function vaciarCarrito() {
-  carrito = [];
-  actualizarCarrito();
+  
+  
+  
+  
+  
+  
+  function guardarCarrito() {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }
+  
+  
+  
+
+function cargarCarritoDesdeStorage() {
+  const guardado = localStorage.getItem("carrito");
+  if (guardado) {
+    carrito = JSON.parse(guardado).map(item => ({
+      ...item,
+      cantidad: item.cantidad || 1
+    }));
+    actualizarCarrito();
+  }
 }
 
-cargarProductos();
+  
+  function vaciarCarrito() {
+    carrito = [];
+    actualizarCarrito();
+    guardarCarrito();
+  }
+  
+  
+  
+  
+  function imprimirCarrito() {
+    const bodyOriginal = document.body.innerHTML;
+    const carritoHTML = document.querySelector('.carrito').innerHTML;
+
+    document.body.innerHTML = `
+      <div class="carrito">
+        ${carritoHTML}
+      </div>
+    `;
+
+    window.print();
+    document.body.innerHTML = bodyOriginal;
+    location.reload();
+  }
+
+  cargarCarritoDesdeStorage();
+  cargarProductos(); 
+  
 </script>
 
+  
+  
+  
+  
+  
 </body>
 </html>

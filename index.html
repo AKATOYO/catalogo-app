@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catálogo de Productos</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: sans-serif;
@@ -42,7 +42,7 @@
       font-size: 16px;
       border-radius: 8px;
       border: none;
-      background-color: #007bff;
+      background: #007bff;
       color: white;
       cursor: pointer;
     }
@@ -59,254 +59,193 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,.1);
       display: flex;
       flex-direction: column;
-      align-items: center;
       text-align: center;
     }
 
     .producto img {
       max-width: 100%;
-      height: auto;
       border-radius: 8px;
       margin-bottom: 10px;
     }
 
     .producto button {
       margin-top: auto;
-      padding: 8px 12px;
-      font-size: 14px;
-      background-color: #28a745;
-      color: white;
+      padding: 8px;
       border: none;
       border-radius: 6px;
+      background: #28a745;
+      color: white;
       cursor: pointer;
     }
 
     .carrito {
       position: fixed;
-      bottom: 0;
-      right: 0;
-      width: 100%;
-      max-width: 300px;
+      right: 10px;
+      top: 10px;
+      width: 300px;
       background: white;
-      border-top-left-radius: 10px;
-      border: 1px solid #ccc;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
       padding: 10px;
-      overflow-y: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
       max-height: 90vh;
-      z-index: 1000;
-    }
-
-    .carrito h3 {
-      margin-top: 0;
-    }
-
-    .carrito ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .carrito li {
-      margin-bottom: 8px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 5px;
-    }
-
-    .carrito button {
-      margin: 2px 2px 0 0;
-      font-size: 12px;
+      overflow-y: auto;
     }
 
     .cliente input,
     .cliente textarea {
       width: 100%;
-      padding: 6px;
-      margin-top: 5px;
       margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
+      padding: 6px;
     }
 
-    @media (min-width: 768px) {
-      .carrito {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        width: 300px;
-        max-height: 90vh;
-      }
-    }
-
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .carrito, .carrito * {
-        visibility: visible;
-      }
-      .carrito {
-        position: absolute;
-        top: 0;
-        left: 0;
+    @media(max-width:768px){
+      .carrito{
+        position: static;
         width: 100%;
+        margin-top: 20px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1>Catálogo de Productos</h1>
+<h1>Catálogo de Productos</h1>
 
-  <div class="buscador">
-    <input type="text" id="busqueda" placeholder="🔍 Buscar producto..." oninput="filtrarProductos()" />
+<div class="buscador">
+  <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
+</div>
+
+<div class="acciones">
+  <button onclick="window.print()">Imprimir</button>
+</div>
+
+<div class="grid" id="productos"></div>
+
+<div class="carrito">
+  <h3>Carrito</h3>
+  <ul id="carrito"></ul>
+  <p><strong>Total:</strong> $<span id="total">0.00</span></p>
+  <button onclick="vaciarCarrito()">Vaciar</button>
+
+  <div class="cliente">
+    <h4>Cliente</h4>
+    <input type="text" placeholder="Nombre">
+    <input type="text" placeholder="Teléfono">
+    <textarea placeholder="Observaciones"></textarea>
   </div>
+</div>
 
-  <div class="acciones">
-    <button onclick="window.print()">🖨️ Imprimir Productos</button>
-  </div>
+<script>
+const supabaseUrl = "https://yliohprzqxzpyyrpvlvh.supabase.co";
+const supabaseKey = "TU_SUPABASE_ANON_KEY";
 
-  <div class="grid" id="productos"></div>
+const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-  <div class="carrito">
-    <h3>🛒 Carrito</h3>
-    <ul id="carrito"></ul>
-    <p><strong>Total:</strong> $<span id="total">0.00</span></p>
-    <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
+let productosOriginales = [];
+let carrito = [];
 
-    <div class="cliente">
-      <h4>🧍 Cliente</h4>
-      <input type="text" id="nombreCliente" placeholder="Nombre">
-      <input type="text" id="telefonoCliente" placeholder="Teléfono">
-      <textarea id="observacionesCliente" placeholder="Observaciones" rows="3"></textarea>
-    </div>
-  </div>
+async function cargarProductos() {
+  const { data, error } = await client
+    .from("productos")
+    .select("*");
 
-  <!-- Tu script JavaScript actual permanece sin cambios, ya que está bien estructurado -->
-  <script> 
-    // Tu script JS sigue aquí sin cambios
-    // Si lo deseas, puedo también optimizarlo o dividirlo en módulos
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-const supabaseUrl = 'https://yliohprzqxzpyyrpvlvh.supabase.co';
-const supabaseAnonKey = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Reemplaza con tu clave anon si es diferente
+  productosOriginales = data;
+  mostrarProductos(data);
+}
 
-const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+function mostrarProductos(productos) {
+  const contenedor = document.getElementById("productos");
+  contenedor.innerHTML = "";
 
-    let productosOriginales = [];
-    let carrito = [];
+  productos.forEach(prod => {
+    const div = document.createElement("div");
+    div.className = "producto";
 
-    async function cargarProductos() {
-      const { data, error } = await client.from("productos").select("*");
-      if (error) return console.error("Error al cargar productos:", error);
-      productosOriginales = data;
-      mostrarProductos(data);
-    }
+    div.innerHTML = `
+      <img src="${prod.imagen_url || ''}">
+      <h3>${prod.nombre}</h3>
+      <p>${prod.descripcion || ''}</p>
+      <p><strong>$${Number(prod.precio).toFixed(2)}</strong></p>
+      <button onclick="agregarAlCarrito(${prod.id})">Agregar</button>
+    `;
 
-    function mostrarProductos(productos) {
-      const contenedor = document.getElementById("productos");
-      contenedor.innerHTML = "";
-      productos.forEach(prod => {
-        let urlImagen = prod.imagen_url || "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
-        const div = document.createElement("div");
-        div.className = "producto";
-        div.innerHTML = `
-          <img src="${urlImagen}" alt="${prod.nombre}">
-          <h3>${prod.nombre}</h3>
-          <p>${prod.descripcion || ""}</p>
-          <p><strong>$${parseFloat(prod.precio || 0).toFixed(2)}</strong></p>
-          <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
-        `;
-        contenedor.appendChild(div);
-      });
-    }
+    contenedor.appendChild(div);
+  });
+}
 
-    function filtrarProductos() {
-      const texto = document.getElementById("busqueda").value.toLowerCase();
-      const filtrados = productosOriginales.filter(p =>
-        p.nombre.toLowerCase().includes(texto) ||
-        (p.descripcion || "").toLowerCase().includes(texto)
-      );
-      mostrarProductos(filtrados);
-    }
+function filtrarProductos() {
+  const texto = document.getElementById("busqueda").value.toLowerCase();
 
-    function agregarAlCarrito(producto) {
-      const existente = carrito.find(p => p.id === producto.id);
-      if (existente) {
-        existente.cantidad += 1;
-      } else {
-        producto.cantidad = 1;
-        carrito.push(producto);
-      }
-      actualizarCarrito();
-      guardarCarrito();
-    }
+  const filtrados = productosOriginales.filter(p =>
+    p.nombre.toLowerCase().includes(texto) ||
+    (p.descripcion || "").toLowerCase().includes(texto)
+  );
 
-    function quitarDelCarrito(indice) {
-      carrito.splice(indice, 1);
-      actualizarCarrito();
-      guardarCarrito();
-    }
+  mostrarProductos(filtrados);
+}
 
-    function cambiarCantidad(index, cambio) {
-      carrito[index].cantidad += cambio;
-      if (carrito[index].cantidad <= 0) {
-        carrito.splice(index, 1);
-      }
-      actualizarCarrito();
-      guardarCarrito();
-    }
+function agregarAlCarrito(id) {
+  const producto = productosOriginales.find(p => p.id === id);
 
-    function actualizarCarrito() {
-      const lista = document.getElementById("carrito");
-      const total = document.getElementById("total");
-      lista.innerHTML = "";
-      let suma = 0;
-      carrito.forEach((item, index) => {
-        const precio = parseFloat(item.precio) || 0;
-        const subtotal = precio * item.cantidad;
-        suma += subtotal;
-        lista.innerHTML += `
-          <li>
-            <strong>${item.nombre}</strong><br>
-            <small>${item.descripcion || ""}</small><br>
-            $${item.precio} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>
-            <button onclick="cambiarCantidad(${index}, -1)">➖</button>
-            <button onclick="cambiarCantidad(${index}, 1)">➕</button>
-            <button onclick="quitarDelCarrito(${index})">❌</button>
-          </li>
-        `;
-      });
-      total.textContent = suma.toFixed(2);
-    }
+  const existe = carrito.find(p => p.id === id);
 
-    function guardarCarrito() {
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-    }
+  if (existe) {
+    existe.cantidad++;
+  } else {
+    carrito.push({...producto, cantidad: 1});
+  }
 
-    function cargarCarritoDesdeStorage() {
-      const guardado = localStorage.getItem("carrito");
-      if (guardado) {
-        carrito = JSON.parse(guardado).map(item => ({
-          ...item,
-          cantidad: item.cantidad || 1
-        }));
-        actualizarCarrito();
-      }
-    }
+  actualizarCarrito();
+}
 
-    function vaciarCarrito() {
-      carrito = [];
-      actualizarCarrito();
-      guardarCarrito();
-    }
+function actualizarCarrito() {
+  const lista = document.getElementById("carrito");
+  const total = document.getElementById("total");
 
-    cargarCarritoDesdeStorage();
-    cargarProductos();
-  </script>
+  lista.innerHTML = "";
+  let suma = 0;
+
+  carrito.forEach((item, index) => {
+    const subtotal = item.precio * item.cantidad;
+    suma += subtotal;
+
+    lista.innerHTML += `
+      <li>
+        ${item.nombre} x ${item.cantidad}
+        <button onclick="cambiarCantidad(${index}, -1)">-</button>
+        <button onclick="cambiarCantidad(${index}, 1)">+</button>
+      </li>
+    `;
+  });
+
+  total.textContent = suma.toFixed(2);
+}
+
+function cambiarCantidad(index, cambio) {
+  carrito[index].cantidad += cambio;
+
+  if (carrito[index].cantidad <= 0) {
+    carrito.splice(index, 1);
+  }
+
+  actualizarCarrito();
+}
+
+function vaciarCarrito() {
+  carrito = [];
+  actualizarCarrito();
+}
+
+cargarProductos();
+</script>
+
 </body>
 </html>

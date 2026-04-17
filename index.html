@@ -172,17 +172,36 @@
         padding-bottom: 0;
     }
 
-    .carrito li button {
-        background: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 3px 8px;
-        cursor: pointer;
-        font-size: 0.8em;
-        margin-left: 5px;
+    /* Estilos para los botones de cantidad en el carrito */
+    .carrito li span { /* Aseguramos que el span contenedor esté bien definido */
+        display: flex; /* Usamos flex para alinear bien los botones */
+        align-items: center; /* Centra verticalmente */
     }
-     .carrito li button:hover {
+
+    .carrito li button {
+        background: #f0ad4e; /* Un color más neutro o similar al botón "Vaciar" */
+        color: #333; /* Texto oscuro */
+        border: 1px solid #d48f2e; /* Borde sutil */
+        border-radius: 5px; /* Bordes un poco más redondeados */
+        padding: 5px 10px; /* Padding un poco mayor para simetría */
+        cursor: pointer;
+        font-size: 0.9em; /* Tamaño de fuente ligeramente mayor */
+        margin: 0 3px; /* Pequeño margen entre botones */
+        transition: background-color 0.3s ease;
+        min-width: 30px; /* Ancho mínimo para que no se achiquen demasiado */
+        text-align: center;
+    }
+    .carrito li button:hover {
+        background: #e0a800; /* Color al pasar el ratón */
+    }
+
+    /* Estilo específico para el botón '-' si quieres que sea diferente, o déjalo igual */
+    .carrito li button:first-of-type {
+        background: #d9534f; /* Rojo para decrementar */
+        color: white;
+        border-color: #d43f3a;
+    }
+    .carrito li button:first-of-type:hover {
         background: #c82333;
     }
 

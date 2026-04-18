@@ -35,19 +35,31 @@
   align-items: center;
 }
 
-#busqueda{
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
-  width: 70%;
-}
+     #busqueda {
+      padding: 10px 15px;
+      width: 650px;
+      height: 70px;
+      border: 1px solid #0D0909;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
 
+    #busqueda:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
 
-
-.boton-imprimir {
-  width: 180px; /* Ancho deseado */
-  height: 60px;  /* Altura deseada */
+    #busqueda::placeholder {
+      color: #999;
+      opacity: 1;
+    }
+      
+ .boton-imprimir {
+  width: 250px; /* Ancho deseado */
+  height: auto;  /* Altura deseada */
   background-color: #007bff; /* Color de fondo de ejemplo (azul) */
   color: white; /* Color del texto */
   border: none; /* Sin borde */
@@ -64,13 +76,14 @@
 .boton-imprimir:hover {
   background-color: #0056b3; /* Color de fondo al pasar el ratón */
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+}   
+
+
+.boton-imprimir:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el ratón */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
 }
 
-
-
-
-
-    
     
 @media print {
  
@@ -152,12 +165,12 @@
   <h1>Catálogo de Productos</h1>
 
   <div class="buscador">
-    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()" style="padding:5px; width: 300px;">
+    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
   </div>
 
   <div class="acciones">
     <button class="boton-imprimir" onclick="window.print()">🖨️ Imprimir Productos</button>
-    <button onclick="window.print()">🖨️ Imprimir Productos</button>
+    
   </div>
 
   <div class="grid" id="productos">  </div>

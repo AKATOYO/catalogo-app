@@ -111,7 +111,7 @@ const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
       guardarCarrito();
     }
 
-function verOcultarCarrito() {
+function carritoculto() {
     // Obtenemos la referencia al elemento del carrito
     const carrito = document.getElementById('carrito');
 

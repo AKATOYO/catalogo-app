@@ -111,6 +111,10 @@ const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
       guardarCarrito();
     }
 
+    cargarCarritoDesdeStorage();
+    cargarProductos();
+
+
 function carritoculto() {
     // Obtenemos la referencia al elemento del carrito
     const carrito = document.getElementById('carrito');
@@ -143,5 +147,6 @@ function carritoculto() {
 
 
 
-    cargarCarritoDesdeStorage();
-    cargarProductos();
+
+
+

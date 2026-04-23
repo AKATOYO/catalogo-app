@@ -114,34 +114,6 @@ const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
     cargarCarritoDesdeStorage();
     cargarProductos();
 
-const carrito = document.getElementById('carrito');
-
-function carritoculto() {
-    const carrito = document.getElementById('carrito');
-    carrito.classList.toggle('carritoculto');
-
-    // Verificamos el estado actual del carrito
-    if (carrito.classList.contains('carrito-oculto')) {
-        // Si está oculto, lo mostramos
-        carrito.classList.remove('carrito-oculto');
-        carrito.classList.add('carrito'); // Añadimos la clase para mostrarlo con estilo
-        // Para la animación, esperamos un instante para que se aplique la clase 'carrito'
-        // y luego modificamos la opacidad y transformación.
-        setTimeout(() => {
-            carrito.style.opacity = '1';
-            carrito.style.transform = 'translateY(0)';
-        }, 10); // Un pequeño retardo es suficiente
-    } else {
-        // Si está visible, lo ocultamos
-        // Primero aplicamos estilos para la animación de ocultar
-        carrito.style.opacity = '0';
-        carrito.style.transform = 'translateY(-20px)';
-        // Después de la transición, añadimos la clase 'carrito-oculto'
-        setTimeout(() => {
-            carrito.classList.remove('carrito');
-            carrito.classList.add('carrito-oculto');
-        }, 300); // Debe coincidir con la duración de la transición CSS (0.3s)
-    }
 }
 
 

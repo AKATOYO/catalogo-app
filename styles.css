@@ -127,26 +127,7 @@
     }
 
 
- .carritoculto {
-  width: 250px; /* Ancho deseado */
-  height: auto;  /* Altura deseada */
-  background-color: #007bff; /* Color de fondo de ejemplo (azul) */
-  color: white; /* Color del texto */
-  border: none; /* Sin borde */
-  padding: 10px 20px; /* Relleno interno */
-  text-align: center; /* Alineación del texto */
-  text-decoration: none; /* Sin subrayado */
-  display: inline-block; /* Para que width y height funcionen correctamente */
-  font-size: 18px; /* Tamaño de fuente */
-  cursor: pointer; /* Cursor al pasar por encima */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-
-.carritoculto:hover {
-  background-color: #0056b3; /* Color de fondo al pasar el ratón */
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
-}   
+   
 
 
 

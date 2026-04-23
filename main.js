@@ -115,9 +115,10 @@ const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
     cargarProductos();
 
 const carrito = document.getElementById('carrito');
+
 function carritoculto() {
-    // Obtenemos la referencia al elemento del carrito
     const carrito = document.getElementById('carrito');
+    carrito.classList.toggle('carritoculto');
 
     // Verificamos el estado actual del carrito
     if (carrito.classList.contains('carrito-oculto')) {

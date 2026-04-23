@@ -2,12 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  
-  <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=9, minimum-scale=0.1">
   <title>Catálogo de Productos</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     .buscador, .acciones { margin-bottom: 20px; }
@@ -30,64 +26,17 @@
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
-  width: 380px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
-     #busqueda {
-      padding: 10px 15px;
-      width: 400px;
-      height: 50px;
-      border: 1px solid #0D0909;
-      border-radius: 5px;
-      font-size: 16px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    }
-
-    #busqueda:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-    }
-
-    #busqueda::placeholder {
-      color: #999;
-      opacity: 1;
-    }
-      
- .boton-imprimir {
-  width: 250px; /* Ancho deseado */
-  height: auto;  /* Altura deseada */
-  background-color: #007bff; /* Color de fondo de ejemplo (azul) */
-  color: white; /* Color del texto */
-  border: none; /* Sin borde */
-  padding: 10px 20px; /* Relleno interno */
-  text-align: center; /* Alineación del texto */
-  text-decoration: none; /* Sin subrayado */
-  display: inline-block; /* Para que width y height funcionen correctamente */
-  font-size: 18px; /* Tamaño de fuente */
-  cursor: pointer; /* Cursor al pasar por encima */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-
-.boton-imprimir:hover {
-  background-color: #0056b3; /* Color de fondo al pasar el ratón */
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
-}   
-
-
+ 
     
 @media print {
- 
- body * {
+  body * {
     visibility: hidden;
   }
-
-  
   .carrito, .carrito * {
     visibility: visible;
   }
@@ -161,26 +110,27 @@
   <h1>Catálogo de Productos</h1>
 
   <div class="buscador">
-    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()">
+    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()" style="padding:5px; width: 300px;">
   </div>
 
   <div class="acciones">
-    <button class="carritoculto" onclick="carritoculto()">🛒 Ver/Ocultar Carrito</button>
-    <button class="boton-imprimir" onclick="window.print()">🖨️ Imprimir Productos</button>
-    
+    <button onclick="window.print()">🖨️ Imprimir Productos</button>
   </div>
 
   <div class="grid" id="productos">  </div>
   
   
- <div id="carrito" class="carrito">
-     <div id="micarrito">
+
+  <div class="carrito">
+    
+     <div id="mi carrito">
          <h3>🛒 Carrito</h3>
         <ul id="carrito"></ul>
-        <p><strong>Total:</strong> $<span id="total">0</span></p>             
+        <p><strong>Total:</strong> $<span id="total">0</span></p>
+    
        <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
-     </div>
-</div>
+     
+    </div>
     
     
     <div class="cliente">
@@ -197,13 +147,21 @@
    
   
   
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<div id="productos" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
 
 
 <script>
-  const SUPABASE_URL = "https://yliohprzqxzpyyrpvlvh.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc";
+  
+  
+    // ... (tu JavaScript existente para Supabase, cargarProductos, etc.) ...
+  
+  const SUPABASE_URL = 'https://yliohprzqxzpyyrpvlvh.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Reemplaza con tu clave anon si es diferente
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  
+  
 
   let productosOriginales = [];
   let carrito = [];

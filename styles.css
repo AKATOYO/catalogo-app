@@ -141,6 +141,9 @@
   cursor: pointer; /* Cursor al pasar por encima */
   border-radius: 8px; /* Bordes redondeados */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none; /* Evita interacción mientras está oculto */
 }
 
 .carritoculto:hover {

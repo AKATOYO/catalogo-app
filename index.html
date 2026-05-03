@@ -1,340 +1,558 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Catálogo de Productos</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .buscador, .acciones { margin-bottom: 20px; }
-    .producto { border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin: 10px; width: 200px; }
-    .producto img { max-width: 100%; border-radius: 8px; }
-    .grid { display: flex; flex-wrap: wrap; gap: 10px; }
-    .carrito { position: fixed; top: 10px; right: 10px; background: #f8f8f8; border: 1px solid #ccc; padding: 10px; border-radius: 8px; width: 250px; max-height: 90vh; overflow-y: auto; }
-    .carrito ul { list-style: none; padding: 0; margin: 0; }
-    .carrito li { margin-bottom: 5px; font-size: 14px; }
-    
-    
-   .grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo de Productos</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+  padding: 15px;
+  z-index: 1;
 }
 
-.producto {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* HEADER */
+h1 {
+  text-align: center;
+}
+
+/* BUSCADOR */
+#busqueda {
+  width: 60%;
+  position: fixed;
+  bottom: 80px;
+  right: 30%;
+  border-style: solid;
+  border-color: #1365E8;
+  border-radius: 50px;
+  padding: 15px 20px;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  z-index: 12;
+}
+  
+  
+ /* BOTON CARRITO FLOTANTE */
+#btnCarrito {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  border-radius: 50px;
+  padding: 16px 21px;
+  font-size: 40px;   
+  background-color: #007bff;
+  z-index: 1000;
+  
 }
  
-    
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  .carrito, .carrito * {
-    visibility: visible;
-  }
-  .carrito {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    padding: 20px;
-  }
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
   
   
   
-   #micarrito {
-    display:grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos imagenes por fila */
-    gap: 15px;
-  }
-  
-  
-      #micarrito img {
-      width: 83%;
-      height: auto;
-      object-fit: cover;
-      margin-bottom: 6px;
-      flex-wrap: wrap; /* Para que los productos se acomoden en varias filas */
-      gap: 21px; /* Espacio entre productos */
-      
-    }
-  
-  
+ /* CARRITO */
+.carrito {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 98%;
+  max-width: 97%;
+  height: 100%;
+  background: white;
+  transform: translateX(100%);
+  transition: .3s;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: -5px 0 20px rgba(0,0,0,.2);
+  z-index: 1000;
+}
+
+.carrito.visible {
+  transform: translateX(0);
+}
+ 
   
   
   
 
-   
-.cliente {
-  margin-top: 10px;
-  font-size: 14px;
+
+/* PRODUCTO */
+.producto {
+  background: white;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+  transition: .2s;
 }
-.cliente input, .cliente textarea {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+
+.producto:hover {
+  transform: translateY(-5px);
 }
-    
-  .carrito button {
-  margin: 2px;
-  padding: 2px 6px;
-  font-size: 14px;
-}
-    
-    
-    
-    .miniatura {
-  width: 100px;
+
+.producto img {
+  max-width: 100%;
   height: auto;
-  object-fit: contain;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  object-fit: cover;
+  border-radius: 10px;
+  z-index: 2;
 }
 
+/* BOTONES */
+button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  transition: .2s;
+  font-size: 20px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+
+
+/* INPUTS */
+.cliente input,
+.cliente textarea {
+  display:block;
+  width: 40%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  vertical-align: top;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 220px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: .3s;
+  z-index:1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  z-index:1000;
+}
+
+    /* --- Estilos para la Tabla del Carrito (si es una tabla) --- */
+.tabla-carrito {
+  width: 100%; /* O un ancho fijo */
+  table-layout: fixed;
+  border-collapse: collapse; /* Para que los bordes se unan */
+}
+
+.tabla-carrito th,
+.tabla-carrito td {
+  border: 1px solid #ccc; /* Ejemplo de borde */
+  padding: 5px; /* Espaciado interno */
+  text-align: left; /* Alineación del texto */
+}
+
+.tabla-carrito th {
+  background: #1d2f5f !important;
+  font-weight: bold;
+  padding-bottom: 5px;
+  color: white;
+  -webkit-print-color-adjust: exact;
+  -print-color-adjust: exact;
+}
+
+/* Anchos de columna */
+.tabla-carrito th:nth-child(1) { width: 10%; } /* Imagen */
+.tabla-carrito th:nth-child(2) { width: 20%; } /* Nombre */
+.tabla-carrito th:nth-child(3) { width: 22%; } /* Descripción */
+.tabla-carrito th:nth-child(4) { width: 10%; } /* Precio */
+.tabla-carrito th:nth-child(5) { width: 17%; } /* Cantidad */
+.tabla-carrito th:nth-child(6) { width: 12.5%; } /* Subtotal */
+.tabla-carrito th:nth-child(7) { width: 8.5%; } /* Acción */ 
+ 
   
-    
-    
-    
-  </style>
+
+  
+  
+  
+/* Estilos adicionales para los inputs dentro de .cliente */
+.cliente input,
+.cliente textarea {
+   
+    width: 100%; /* Ajusta el ancho para que quepa con el padding */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Asegura que el padding no afecte el width */
+}
+
+.cliente textarea {
+    min-height: 50px; /* Altura mínima para el textarea */
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+  
+  
+  
+  
+  
+  
+  .wtp {
+width: 35%;
+height: auto;
+z-index: 1000;
+padding: 10px; 
+margin: 8px;
+font-size: 20px;    
+}
+  
+</style>
 </head>
+
 <body>
 
-  <h1>Catálogo de Productos</h1>
+<h1>Catálogo de Productos</h1>
 
-  <div class="buscador">
-    <input type="text" id="busqueda" placeholder="Buscar producto..." oninput="filtrarProductos()" style="padding:5px; width: 300px;">
-  </div>
+<input type="text" id="busqueda" placeholder="Buscar..." oninput="filtrarProductos()">
 
-  <div class="acciones">
-    <button onclick="window.print()">🖨️ Imprimir Productos</button>
-  </div>
 
-  <div class="grid" id="productos">  </div>
   
+ <button id="btnCarrito">🛒 (<span id="contador">0</span>)</button>
   
 
-  <div class="carrito">
+ <div id="toast" class="toast">Producto agregado</div> 
+  
+  
+  
+
+<div id="productos" class="grid">   </div>
+  
+  
+  
+
+<!-- CARRITO -->
+<div id="carrito" class="carrito">
+  
+  
+            <div class="boton">  
+                      <button onclick="vaciarCarrito()">Vaciar</button>
+                      <button onclick="window.print()">Imprimir</button>
+                      <button onclick="toggleCarrito()">Cerrar</button>
+                      <button class="wtp" onclick="enviarWhatsApp()">Enviar 🛒 por WhatsApp</button>
+          </div>
+  
+  
+                   <div class="cliente">
+                          <h3>🧍 Datos del Cliente</h3>
+                          <input type="text" id="nombreCliente" placeholder="Nombre">
+                          <input type="text" id="telefonoCliente" placeholder="Teléfono">
+                          <textarea id="observacionesCliente" placeholder="Observaciones"></textarea> 
+                   </div>  
+
+
+                      <h2>Carrito</h2>
+
+                  <table class="tabla-carrito">
+                                      <thead>
+                                            <tr>
+                                                 <th>Img</th>
+                                                 <th>Nombre</th>
+                                                 <th>Descripcion</th>
+                                                 <th>Precio</th>
+                                                 <th>Unidad</th>
+                                                 <th>Subtotal</th>
+                                                 <th></th>
+                                            </tr>
+                                     </thead>
+                            <tbody id="detalle-carrito"></tbody>
+                   </table>
+  
+  
+         <div class="footerc">
+
+  
+  
+                   <div class="valor">
+                         <h3>Resumen</h3>
+                         <p>Subtotal: $<span id="subtotal">0</span></p>
+                         <p>IVA (19%): $<span id="iva">0</span></p>
+                         <h2>Total: $<span id="total">0</span></h2>
+                   </div>
     
-     <div id="mi carrito">
-         <h3>🛒 Carrito</h3>
-        <ul id="carrito"></ul>
-        <p><strong>Total:</strong> $<span id="total">0</span></p>
-    
-       <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
-     
-    </div>
-    
-    
-    <div class="cliente">
-  <h3>🧍 Datos del Cliente</h3>
-  <input type="text" id="nombreCliente" placeholder="Nombre" style="width:100%; margin-bottom:5px;">
-  <input type="text" id="telefonoCliente" placeholder="Teléfono" style="width:100%; margin-bottom:5px;">
-  <textarea id="observacionesCliente" placeholder="Observaciones" rows="3" style="width:100%;"></textarea>
+          </div>
+  
+          <div class="footern">
+                            <h2><p>LOS PRECIOS PUEDEN  VARIAR  SEGUN EL STOCK Y LA IMPORTACION </p> </h2>
+          </div>
+  
+  
+  
+             
+  
+  
+  
+
+  
+  
+  
+  
+  
 </div>
 
-    
- 
-    
-  </div>
-   
-  
-  
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<div id="productos" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
-
-
 <script>
-  
-  
-    // ... (tu JavaScript existente para Supabase, cargarProductos, etc.) ...
-  
-  const SUPABASE_URL = 'https://yliohprzqxzpyyrpvlvh.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'; // Reemplaza con tu clave anon si es diferente
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  
-  
-
-  let productosOriginales = [];
-  let carrito = [];
-
-  async function cargarProductos() {
-    const { data, error } = await client.from("productos").select("*");
-    if (error) {
-      console.error("Error al cargar productos:", error);
-      return;
-    }
-    productosOriginales = data;
-    mostrarProductos(data);
-  }
-
- function mostrarProductos(productos) {
-  const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = "";
-
-  productos.forEach(prod => {
-    // Validar si hay imagen, si no usar una por defecto
-     let urlImagen = prod.imagen_url;
-    if (!urlImagen || urlImagen === "null" || urlImagen.trim() === "") {
-    urlImagen = "https://i.ibb.co/jZ88dWLB/PIE-747-FILETEADORA-CON-RODILLOS-747-700-JD.png";
- }
+// SUPABASE
+const client = supabase.createClient(
+  'https://yliohprzqxzpyyrpvlvh.supabase.co',
+  'sb_publishable_jWnZtBxthINwZnn2NDS6wg_wour17Cc'
+);
     
-    
+   
+
+// ESTADO
+let productos = [];
+let carrito = [];
+
+// CARGAR PRODUCTOS
+async function cargarProductos(){
+  const {data} = await client.from("productos").select("*");
+  productos = data || [];
+  mostrarProductos(productos);
+}
+
+// MOSTRAR PRODUCTOS
+function mostrarProductos(lista){
+  const cont = document.getElementById("productos");
+  cont.innerHTML = "";
+
+  lista.forEach(prod=>{
+    const img = prod.imagen_url || "https://via.placeholder.com/200";
 
     const div = document.createElement("div");
     div.className = "producto";
+
     div.innerHTML = `
-      <img src="${urlImagen}" alt="${prod.nombre}">
+      <img src="${img}">
       <h3>${prod.nombre}</h3>
       <p>${prod.descripcion || ""}</p>
-      <p><strong>$${parseFloat(prod.precio) ? parseFloat(prod.precio).toFixed(2) : "0.00"}</strong></p>
-      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar 🛒</button>
+      <strong>$${Number(prod.precio).toFixed(2)}</strong><br>
+      <button data-id="${prod.id}">Agregar</button>
     `;
-    contenedor.appendChild(div);
+
+    div.querySelector("button").addEventListener("click", ()=>{
+      agregarAlCarrito(prod.id);
+    });
+
+    cont.appendChild(div);
   });
 }
 
+// FILTRAR
+function filtrarProductos(){
+  const txt = busqueda.value.toLowerCase();
+  const filtrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(txt) ||
+    (p.descripcion||"").toLowerCase().includes(txt)
+  );
+  mostrarProductos(filtrados);
+}
 
-  function filtrarProductos() {
-    const texto = document.getElementById("busqueda").value.toLowerCase();
-    const filtrados = productosOriginales.filter(p =>
-      p.nombre.toLowerCase().includes(texto) ||
-      (p.descripcion || "").toLowerCase().includes(texto)
-    );
-    mostrarProductos(filtrados);
-  }
+// AGREGAR
+function agregarAlCarrito(id){
+  const prod = productos.find(p=>p.id===id);
+  const existente = carrito.find(p=>p.id===id);
 
-  
-  
-  
- function agregarAlCarrito(producto) {
-  // Si ya está en el carrito, solo incrementa la cantidad
-  const existente = carrito.find(p => p.id === producto.id);
-  if (existente) {
-    existente.cantidad += 1;
+  if(existente){
+    existente.cantidad++;
   } else {
-    producto.cantidad = 1;
-    carrito.push(producto);
+    carrito.push({...prod, cantidad:1});
   }
+
   actualizarCarrito();
-  guardarCarrito();
+  mostrarToast("✅ Agregado al carrito");
 }
 
-  
-  
-  function quitarDelCarrito(indice) {
-  carrito.splice(indice, 1);  
-  actualizarCarrito();
-  guardarCarrito();
-}
+// ACTUALIZAR
+function actualizarCarrito(){
+  const tbody = document.getElementById("detalle-carrito");
+  tbody.innerHTML = "";
 
-  
-  
-  
-  
-function actualizarCarrito() {
-  const lista = document.getElementById("carrito");
-  const total = document.getElementById("total");
-  lista.innerHTML = "";
-  let suma = 0;
+  let subtotal = 0;
 
-  carrito.forEach((item, index) => {
-    const precio = parseFloat(item.precio) || 0;
-    const subtotal = precio * item.cantidad;
-    suma += subtotal;
+  carrito.forEach((item,i)=>{
+    const sub = item.precio * item.cantidad;
+    subtotal += sub;
 
-lista.innerHTML += `
-  <li>
-    <strong>${item.nombre}</strong><br>
-    <small>${item.descripcion || "Sin descripción"}</small><br>
-    $${item.precio} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}<br>
-    <button onclick="cambiarCantidad(${index}, -1)">➖</button>
-    <button onclick="cambiarCantidad(${index}, 1)">➕</button>
-    <button onclick="quitarDelCarrito(${index})">❌</button>
-  </li>
-`;
-  });
+    const fila = document.createElement("tr");
 
-  total.textContent = suma.toFixed(2);
-}
-
-
-  
-  function cambiarCantidad(index, cambio) {
-  carrito[index].cantidad += cambio;
-  if (carrito[index].cantidad <= 0) {
-    carrito.splice(index, 1);
-  }
-  actualizarCarrito();
-  guardarCarrito();
-}
-
-  
-  
-  
-  
-  
-  
-  function guardarCarrito() {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-  }
-  
-  
-  
-
-function cargarCarritoDesdeStorage() {
-  const guardado = localStorage.getItem("carrito");
-  if (guardado) {
-    carrito = JSON.parse(guardado).map(item => ({
-      ...item,
-      cantidad: item.cantidad || 1
-    }));
-    actualizarCarrito();
-  }
-}
-
-  
-  function vaciarCarrito() {
-    carrito = [];
-    actualizarCarrito();
-    guardarCarrito();
-  }
-  
-  
-  
-  
-  function imprimirCarrito() {
-    const bodyOriginal = document.body.innerHTML;
-    const carritoHTML = document.querySelector('.carrito').innerHTML;
-
-    document.body.innerHTML = `
-      <div class="carrito">
-        ${carritoHTML}
-      </div>
+    fila.innerHTML = `
+      <td><img src="${item.imagen_url}" width="50"></td>
+      <td>${item.nombre}</td>
+      <td>${item.descripcion || ""}</td>
+      <td>$${item.precio}</td>
+      <td>
+        <button>-</button>
+        ${item.cantidad}
+        <button>+</button>
+      </td>
+      <td>$${sub.toFixed(2)}</td>
+      <td><button>❌</button></td>
     `;
 
-    window.print();
-    document.body.innerHTML = bodyOriginal;
-    location.reload();
-  }
+    const [btnMenos, btnMas, btnEliminar] = fila.querySelectorAll("button");
 
-  cargarCarritoDesdeStorage();
-  cargarProductos(); 
+    btnMenos.onclick = ()=> cambiarCantidad(i,-1);
+    btnMas.onclick = ()=> cambiarCantidad(i,1);
+    btnEliminar.onclick = ()=> quitar(i);
+
+    tbody.appendChild(fila);
+  });
+
+  const iva = subtotal * 0.19;
+  const total = subtotal + iva;
+
+  document.getElementById("subtotal").textContent = subtotal.toFixed();
+  document.getElementById("iva").textContent = iva.toFixed();
+  document.getElementById("total").textContent = total.toFixed();
+  document.getElementById("contador").textContent = carrito.length;
+
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+// CAMBIAR CANTIDAD
+function cambiarCantidad(i,delta){
+  carrito[i].cantidad += delta;
+  if(carrito[i].cantidad<=0) carrito.splice(i,1);
+  actualizarCarrito();
+}
+
+// ELIMINAR
+function quitar(i){
+  carrito.splice(i,1);
+  actualizarCarrito();
+}
+
+// VACIAR
+function vaciarCarrito(){
+  carrito=[];
+  actualizarCarrito();
+}
+
+// TOGGLE
+function toggleCarrito(){
+  document.getElementById("carrito").classList.toggle("visible");
+}
+
+// STORAGE
+function cargarCarrito(){
+  const data = localStorage.getItem("carrito");
+  if(data){
+    carrito = JSON.parse(data);
+    actualizarCarrito();
+  }
+}
+
+// INIT
+cargarProductos();
+cargarCarrito();
+  
+ // boton carrito 
+   document.getElementById("btnCarrito")
+  .addEventListener("click", toggleCarrito);
+  
+  
+  
+ // mostrar alerta producto agregado 
+  function mostrarToast(msg){
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+    toast.classList.remove("show");
+  },2000);
+}
+  
+
+  // guardar datos del cliente
+  
+function guardarCliente(){
+  const cliente = {
+    nombre: nombreCliente.value,
+    telefono: telefonoCliente.value,
+    obs: observacionesCliente.value
+  };
+  localStorage.setItem("cliente", JSON.stringify(cliente));
+}
+
+document.querySelectorAll(".cliente input, .cliente textarea")
+  .forEach(el => el.addEventListener("input", guardarCliente));  
+  
+  
+  
+  
+  // funcion  cargar datos del cliente
+  
+  function cargarCliente(){
+  const data = JSON.parse(localStorage.getItem("cliente"));
+  if(!data) return;
+
+  nombreCliente.value = data.nombre || "";
+  telefonoCliente.value = data.telefono || "";
+  observacionesCliente.value = data.obs || "";
+}
+
+cargarCliente();
+  
+  
+  
+  
+ // enviar por whatsapp
+  
+  function enviarWhatsApp(){
+  let mensaje = "🛒 *Pedido*\n\n";
+
+  carrito.forEach(item=>{
+    mensaje += `${item.nombre} x${item.cantidad} - $${item.precio}\n`;
+  });
+
+  mensaje += `\nTotal: $${total.textContent}\n\n`;
+  mensaje += `Cliente: ${nombreCliente.value}\n`;
+  mensaje += `Tel: ${telefonoCliente.value}\n`;
+  mensaje += `Obs: ${observacionesCliente.value}`;
+
+  const url = `https://wa.me/573192654225?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
+}
+  
+  
+  
+  
+  
+  
+  
+  
   
 </script>
 
-  
-  
-  
-  
-  
 </body>
 </html>

@@ -7,7 +7,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-<style>
+  
+  
+  <style>
 body {
   font-family: 'Segoe UI', sans-serif;
   background: #f4f6fb;
@@ -35,33 +37,34 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,.2);
   z-index: 12;
 }
-  
-  
+
+
  /* BOTON CARRITO FLOTANTE */
 #btnCarrito {
   position: fixed;
   top: 8px;
-  right: 280px;
+  right: 300px;
   border-radius: 50px;
   padding: 16px 21px;
-  font-size: 20px;   
+  font-size: 20px;
+  color: white;
   background-color: #007bff;
   z-index: 1000;
-  
+
 }
- 
-/* GRID */
+
+/* GRID (para mostrar productos en pantalla) */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
   gap: 20px;
 }
-  
-  
-  
- /* CARRITO */
+
+
+
+ /* CARRITO (contenedor principal) */
 .carrito {
-  position: fixed;
+  position: fixed; /* Para que flote sobre el contenido */
   top: 0;
   right: 0;
   width: 98%;
@@ -79,18 +82,15 @@ h1 {
 .carrito.visible {
   transform: translateX(0);
 }
- 
-  
-.image img {
+
+ .image img {
 width: 100%;
 height: auto;
 
-} 
-  
-  
+}
 
 
-/* PRODUCTO */
+/* PRODUCTO (estilos para la vista de catálogo en pantalla) */
 .producto {
   background: white;
   border-radius: 14px;
@@ -106,6 +106,7 @@ height: auto;
 
 .producto img {
   max-width: 100%;
+  min-width: 50%;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
@@ -130,7 +131,7 @@ button:hover {
 
 
 
-/* INPUTS */
+/* INPUTS (para datos del cliente en pantalla) */
 .cliente input,
 .cliente textarea {
   display:block;
@@ -146,7 +147,7 @@ button:hover {
 .toast {
   position: fixed;
   top: 80px;
-  right: 200px;
+  right: 380px;
   background: #28a745;
   color: white;
   padding: 12px 18px;
@@ -163,7 +164,8 @@ button:hover {
   z-index:1000;
 }
 
-    /* --- Estilos para la Tabla del Carrito (si es una tabla) --- */
+
+    /* --- Estilos para la Tabla del Carrito --- */
 .tabla-carrito {
   width: 100%; /* O un ancho fijo */
   table-layout: fixed;
@@ -182,28 +184,23 @@ button:hover {
   font-weight: bold;
   padding-bottom: 5px;
   color: white;
-  -webkit-print-color-adjust: exact;
+  -webkit-print-color-adjust: exact; /* Para asegurar que el color de fondo se imprima */
   -print-color-adjust: exact;
 }
 
-/* Anchos de columna */
+/* Anchos de columna para la tabla */
 .tabla-carrito th:nth-child(1) { width: 10%; } /* Imagen */
 .tabla-carrito th:nth-child(2) { width: 20%; } /* Nombre */
 .tabla-carrito th:nth-child(3) { width: 22%; } /* Descripción */
 .tabla-carrito th:nth-child(4) { width: 10%; } /* Precio */
 .tabla-carrito th:nth-child(5) { width: 17%; } /* Cantidad */
 .tabla-carrito th:nth-child(6) { width: 12.5%; } /* Subtotal */
-.tabla-carrito th:nth-child(7) { width: 8.5%; } /* Acción */ 
- 
-  
+.tabla-carrito th:nth-child(7) { width: 8.5%; } /* Acción (probablemente no se imprima) */
 
-  
-  
-  
+
 /* Estilos adicionales para los inputs dentro de .cliente */
 .cliente input,
 .cliente textarea {
-   
     width: 100%; /* Ajusta el ancho para que quepa con el padding */
     margin-bottom: 10px;
     padding: 10px;
@@ -216,49 +213,194 @@ button:hover {
     min-height: 50px; /* Altura mínima para el textarea */
     resize: vertical; /* Permite redimensionar verticalmente */
 }
-  
-  
-  
-  
-  
-  
-  .wtp {
+
+
+
+
+.wtp {
 width: 35%;
 height: auto;
 z-index: 1000;
-padding: 10px; 
+padding: 10px;
 margin: 8px;
-font-size: 20px;    
+font-size: 20px;
 }
-  
+
+
+/* --- ESTILOS ESPECÍFICOS PARA IMPRESIÓN --- */
+@media print {
+  /*
+   * Asegura que el cuerpo ocupe toda la página y no tenga márgenes innecesarios
+   * que puedan cortar el contenido.
+   */
+  body {
+    margin: 0;
+    padding: 0;
+    font-size: 10pt; /* Un tamaño de fuente estándar para impresión */
+    color: #000; /* Color de texto negro para impresión */
+    background: #fff; /* Fondo blanco para impresión */
+  }
+
+  /* Oculta todos los elementos que NO deben aparecer en la impresión del carrito */
+  #busqueda,
+  #btnCarrito,
+  .grid, /* Oculta el grid de productos */
+  .carrito .boton, /* Oculta los botones de acción del carrito (vaciar, enviar WhatsApp) */
+  .cliente, /* Oculta los campos de datos del cliente */
+  .toast,
+  .wtp { /* Asegura que este botón específico también se oculte */
+    display: none !important; /* Usamos !important para asegurar que se oculte */
+  }
+
+  /* Muestra el carrito y asegúrate de que ocupe el espacio disponible */
+  #carrito {
+    position: static; /* Quitamos el position:fixed para que se comporte como un elemento normal */
+    width: 100%;
+    max-width: 90%; /* Asegura que no haya límites de ancho */
+    height: auto; /* Altura automática */
+    transform: none; /* Quitamos la transformación de translateX */
+    box-shadow: none; /* Quitamos la sombra */
+    padding: 10px; /* Un poco de padding para que no pegue a los bordes */
+    overflow-y: visible; /* Quitamos el scroll vertical */
+    display: block !important; /* Asegura que se muestre */
+  }
+
+  /* Asegura que la imagen del encabezado se imprima */
+  .carrito encabezado-cotizacion {
+      display: block; /* Asegura que se muestre */
+      max-width: 50%; /* Ajusta el tamaño si es necesario */
+      height: auto;
+      margin-bottom: 15px; /* Espacio debajo de la imagen */
+      -webkit-print-color-adjust: exact;
+      -print-color-adjust: exact;
+  }
+
+  /* Estilos para la tabla del carrito en impresión */
+  .tabla-carrito {
+    width: 100%;
+    margin-top: 15px; /* Espacio sobre la tabla */
+    border-collapse: collapse; /* Asegura que los bordes se junten */
+  }
+
+  .tabla-carrito th,
+  .tabla-carrito td {
+    border: 1px solid #ccc;
+    padding: 8px; /* Aumentamos un poco el padding para legibilidad */
+    text-align: left;
+  }
+
+  .tabla-carrito th {
+    background: #1d2f5f !important; /* Aseguramos el color de fondo */
+    color: white;
+    font-weight: bold;
+    -webkit-print-color-adjust: exact;
+    -print-color-adjust: exact;
+  }
+
+  /* Ajustes de ancho de columna para impresión, si es necesario */
+  .tabla-carrito th:nth-child(1) { width: 15%; } /* Imagen */
+  .tabla-carrito th:nth-child(2) { width: 25%; } /* Nombre */
+  .tabla-carrito th:nth-child(3) { width: 25%; } /* Descripción */
+  .tabla-carrito th:nth-child(4) { width: 10%; } /* Precio */
+  .tabla-carrito th:nth-child(5) { width: 10%; } /* Cantidad */
+  .tabla-carrito th:nth-child(6) { width: 15%; } /* Subtotal */
+  .tabla-carrito th:nth-child(7) { display: none; } /* Ocultamos la columna de acción (eliminar) */
+
+  /* Estilos para las celdas de la tabla */
+  .tabla-carrito td {
+      vertical-align: top; /* Alinea el contenido en la parte superior de la celda */
+  }
+
+  .tabla-carrito td:nth-child(1) img { /* Imagen del producto en la tabla */
+      max-width: 50px; /* Tamaño reducido para la miniatura */
+      height: auto;
+      display: block;
+  }
+
+  /* Estilos para el pie de página de la tabla (resumen) */
+  .footerc {
+    margin-top: 20px;
+    text-align: right; /* Alinea el resumen a la derecha */
+    border-top: 2px solid #1d2f5f; /* Separador */
+    padding-top: 10px;
+  }
+
+  .footerc .valor h3 {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+  }
+
+  .footerc .valor p,
+  .footerc .valor h2 {
+    margin: 5px 0;
+    font-size: 1em;
+  }
+  .footerc .valor h2 {
+    font-size: 1.2em;
+  }
+
+  /* Asegura que el texto de advertencia de precios se imprima */
+  .footern {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      padding: 10px;
+      border-top: 1px dashed #ccc;
+  }
+  .footern p {
+      margin: 0;
+  }
+
+  /* Asegura que el encabezado con el número de cotización se imprima */
+  .carrito .encabezado {
+      margin-bottom: 20px;
+      text-align: center; /* Centra el encabezado */
+  }
+  .carrito .encabezado-cotizacion {
+      margin-top: 10px;
+  }
+  .carrito .encabezado-cotizacion h2 {
+      font-size: 1.3em;
+      margin: 0;
+  }
+  .carrito .encabezado-cotizacion p {
+      margin: 0;
+  }
+}
 </style>
+  
+  
+  
 </head>
 
 <body>
-  <br>
-  <br>
-  <br>
-   <div class="image">
-        <img src="https://github.com/user-attachments/assets/0d6f188a-446f-4eb1-ace5-dae371caef9e">
-  </div> 
-
+  
+<div class="conteni">  
+  
+                <div class="image">
+          
+                              <img src="https://github.com/user-attachments/assets/0d6f188a-446f-4eb1-ace5-dae371caef9e">
+                </div> 
   
 
-<h1>Catálogo de Productos</h1>
+               <h1>Catálogo de Productos</h1>
+  
 
-<input type="text" id="busqueda" placeholder="Buscar..." oninput="filtrarProductos()">
+               <input type="text" id="busqueda" placeholder="Buscar..." oninput="filtrarProductos()">
 
 
   
- <button id="btnCarrito">🛒 (<span id="contador">0</span>)</button>
+               <button id="btnCarrito">🛒 (<span id="contador">0</span>)</button>
   
 
- <div id="toast" class="toast">Producto agregado</div> 
+               <div id="toast" class="toast">Producto agregado</div> 
   
   
+               <div id="productos" class="grid">   </div>
   
-
-<div id="productos" class="grid">   </div>
+  
+</div>  
   
   
   
@@ -267,25 +409,45 @@ font-size: 20px;
 <div id="carrito" class="carrito">
   
   
-            <div class="boton">  
+              <div class="encabezado">
+                          
+                         
+          
+                        <div class="encabezado-cotizacion">
+                                  <h2><p><strong>N° Cotización:</strong> <span id="numeroCotizacion"></span></p></h2>
+
+                        </div>          
+          
+          
+              </div>
+
+  
+  
+              <div class="boton">  
                       <button onclick="vaciarCarrito()">Vaciar</button>
                       <button onclick="window.print()">Imprimir</button>
                       <button onclick="toggleCarrito()">Cerrar</button>
                       <button class="wtp" onclick="enviarWhatsApp()">Enviar 🛒 por WhatsApp</button>
-          </div>
+              </div>
   
   
-                   <div class="cliente">
+              <div class="cliente">
                           <h3>🧍 Datos del Cliente</h3>
                           <input type="text" id="nombreCliente" placeholder="Nombre">
                           <input type="text" id="telefonoCliente" placeholder="Teléfono">
                           <textarea id="observacionesCliente" placeholder="Observaciones"></textarea> 
-                   </div>  
+              </div>  
+  
+  
+              <div class="footern">
+                            <h2><p>LOS PRECIOS ESTAN SUJETOS A CAMBIOS SEGUN LA DISPONIBILIDAD DE STOCK Y LAS CONDICIONES DE IMPORTACION </p> </h2>
+              </div>
+  
 
 
                       <h2>Carrito</h2>
 
-                  <table class="tabla-carrito">
+              <table class="tabla-carrito">
                                       <thead>
                                             <tr>
                                                  <th>Img</th>
@@ -298,40 +460,28 @@ font-size: 20px;
                                             </tr>
                                      </thead>
                             <tbody id="detalle-carrito"></tbody>
-                   </table>
+             </table>
   
   
-         <div class="footerc">
-
-  
-  
+             <div class="footerc">
                    <div class="valor">
                          <h3>Resumen</h3>
                          <p>Subtotal: $<span id="subtotal">0</span></p>
                          <p>IVA (19%): $<span id="iva">0</span></p>
                          <h2>Total: $<span id="total">0</span></h2>
-                   </div>
-    
-          </div>
-  
-          <div class="footern">
-                            <h2><p>LOS PRECIOS PUEDEN  VARIAR  SEGUN EL STOCK Y LA IMPORTACION </p> </h2>
-          </div>
-  
-  
-  
-             
-  
-  
-  
-
-  
-  
-  
-  
-  
+                   </div>  
+             </div>
+  <br>
+  <br>
+  <br>
+  <br>
 </div>
 
+  
+  
+  
+  
+  
 <script>
 // SUPABASE
 const client = supabase.createClient(
@@ -559,13 +709,50 @@ cargarCliente();
   
   
   
-  
-  
-  
-  
-  
-  
 </script>
+  
+  
+  
+  
+  
+<script>
+function generarCotizacion() {
+    const ahora = new Date();
+
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    const segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+    // número aleatorio de 3 dígitos
+    const aleatorio = Math.floor(100 + Math.random() * 900);
+
+    const numeroFormateado =
+        `COT-${año}${mes}${dia}-${horas}${minutos}${segundos}-${aleatorio}`;
+
+    document.getElementById("numeroCotizacion").textContent = numeroFormateado;
+    document.getElementById("fechaCotizacion").textContent = ahora.toLocaleDateString('es-CO');
+    document.getElementById("horaCotizacion").textContent = ahora.toLocaleTimeString('es-CO');
+}
+
+// Ejecutar justo antes de imprimir
+window.onbeforeprint = generarCotizacion;
+
+// También al cargar (por si guardan PDF sin imprimir)
+window.onload = generarCotizacion;
+</script>  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 </body>
 </html>
